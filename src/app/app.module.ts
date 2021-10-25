@@ -14,6 +14,7 @@ import { CreateFieldDialogComponent } from './field/create-field-dialog/create-f
 import { EditFieldDialogComponent } from './field/edit-field-dialog/edit-field-dialog.component';
 import { DeleteFieldDialogComponent } from './field/delete-field-dialog/delete-field-dialog.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     CreateFieldDialogComponent,
     EditFieldDialogComponent,
     DeleteFieldDialogComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    AuthComponent
   ],
   imports: [
     BrowserModule,

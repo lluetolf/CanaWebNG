@@ -8,6 +8,7 @@ ng new CanaWebNG --routing --style scss --commit
 cd CanaWebNG
 npm install angular-in-memory-web-api --save-dev
 
+
 # Dashboard
 ng generate component dashboard --skip-tests
 ng generate service dashboard/dashboard --skip-tests
@@ -37,7 +38,9 @@ ng generate component field/delete-field-dialog --skip-tests
 ng generate service field/field --skip-tests
 ng generate interface field/field.model
 
-# HTTP interceptor
+# Auth and HTTP interceptor
+ng generate component auth --skip-tests
+ng generate guard auth
 ng generate interceptor auth/auth  --skip-tests
 
 git add .
