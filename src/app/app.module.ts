@@ -13,6 +13,7 @@ import { FieldComponent } from './field/field.component';
 import { CreateFieldDialogComponent } from './field/create-field-dialog/create-field-dialog.component';
 import { EditFieldDialogComponent } from './field/edit-field-dialog/edit-field-dialog.component';
 import { DeleteFieldDialogComponent } from './field/delete-field-dialog/delete-field-dialog.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { DeleteFieldDialogComponent } from './field/delete-field-dialog/delete-f
     FieldComponent,
     CreateFieldDialogComponent,
     EditFieldDialogComponent,
-    DeleteFieldDialogComponent
+    DeleteFieldDialogComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

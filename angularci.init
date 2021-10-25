@@ -1,0 +1,60 @@
+#
+# CanaWebNG Application
+#
+
+
+#
+ng new CanaWebNG --routing --style scss --commit
+cd CanaWebNG
+npm install angular-in-memory-web-api --save-dev
+
+# Dashboard
+ng generate component dashboard --skip-tests
+ng generate service dashboard/dashboard --skip-tests
+
+# PageNotFound
+ng generate component page-not-found --skip-tests
+
+# Receivable
+ng generate component receivable --skip-tests
+ng generate service receivable/receivable --skip-tests
+ng generate interface receivable/receivable.model
+
+# payable
+ng generate component payable --skip-tests
+ng generate component payable/edit-payable-dialog --skip-tests
+ng generate component payable/create-payable-dialog --skip-tests
+ng generate component payable/delete-payable-dialog --skip-tests
+ng generate service payable/payable --skip-tests
+ng generate interface payable/payable.model
+
+
+# Field
+ng generate component field --skip-tests
+ng generate component field/create-field-dialog --skip-tests
+ng generate component field/edit-field-dialog --skip-tests
+ng generate component field/delete-field-dialog --skip-tests
+ng generate service field/field --skip-tests
+ng generate interface field/field.model
+
+# HTTP interceptor
+ng generate interceptor auth/auth  --skip-tests
+
+git add .
+git commit -m "Create   all components and services."
+
+###
+# Configure inmemory db:
+# HttpClientInMemoryWebApiModule.forRoot(InMemoryDataServiceService),
+
+# Configure HTTP interceptor
+#providers: [
+#  {
+#    provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+#  }
+#],
+
+
+ng add @angular-eslint/schematics
+ng lint
+
