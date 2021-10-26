@@ -6,19 +6,21 @@ import {FieldComponent} from "./field/field.component";
 import {PayableComponent} from "./payable/payable.component";
 import {ReceivableComponent} from "./receivable/receivable.component";
 import {AuthComponent} from "./auth/auth.component";
+import {AuthGuard} from "./auth/auth.guard";
+import {ConfirmGuard} from "./auth/confirm.guard";
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'field', component: FieldComponent },
-  { path: 'payable', component: PayableComponent },
-  { path: 'receivable', component: ReceivableComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], canDeactivate: [ConfirmGuard]},
+  { path: 'field', component: FieldComponent, canActivate: [AuthGuard]},
+  { path: 'payable', component: PayableComponent, canActivate: [AuthGuard]},
+  { path: 'receivable', component: ReceivableComponent, canActivate: [AuthGuard]},
   { path: 'auth', component: AuthComponent },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {enableTracing: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

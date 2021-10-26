@@ -15,6 +15,7 @@ import { EditFieldDialogComponent } from './field/edit-field-dialog/edit-field-d
 import { DeleteFieldDialogComponent } from './field/delete-field-dialog/delete-field-dialog.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AuthComponent } from './auth/auth.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -30,10 +31,11 @@ import { AuthComponent } from './auth/auth.component';
     EditFieldDialogComponent,
     DeleteFieldDialogComponent,
     PageNotFoundComponent,
-    AuthComponent
+    AuthComponent,
   ],
   imports: [
     BrowserModule,
+    ReactiveFormsModule,
     AppRoutingModule
   ],
   providers: [],

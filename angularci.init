@@ -40,7 +40,8 @@ ng generate interface field/field.model
 
 # Auth and HTTP interceptor
 ng generate component auth --skip-tests
-ng generate guard auth
+ng generate guard auth/auth --skip-tests
+ng generate guard auth/confirm --skip-tests
 ng generate interceptor auth/auth  --skip-tests
 
 git add .
