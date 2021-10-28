@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {AbstractControl, FormControl, FormGroup} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-auth',
@@ -7,14 +7,16 @@ import {AbstractControl, FormControl, FormGroup} from "@angular/forms";
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  showPasswordHint: boolean = true;
+  showPasswordHint: boolean = false;
+  loginForm = this.builder.group({
+    username: ['', Validators.required],
+    password: ['',
+      [Validators.required, Validators.minLength(6)]
+    ]
+  });
 
-  loginForm = new FormGroup(
-    {
-      username: new FormControl(''),
-      password: new FormControl('')
-    }
-  );
+
+
 
   get username(): AbstractControl {
     return this.loginForm.controls.username;
@@ -24,7 +26,7 @@ export class AuthComponent implements OnInit {
     return this.loginForm.controls.password;
   }
 
-  constructor() { }
+  constructor(private builder: FormBuilder) { }
 
   ngOnInit(): void {
   }
