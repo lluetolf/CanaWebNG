@@ -1,15 +1,9 @@
-<h1>Header</h1>
-<hr>
-<nav>
-  <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
-  <a routerLink="/field" routerLinkActive="active">Field</a>
-  <a routerLink="/payable" routerLinkActive="active">Payable</a>
-  <a routerLink="/receivable" routerLinkActive="active">Receivable</a>
-  <a routerLink="/auth" routerLinkActive="active">Auth</a>
-</nav>
-<hr>
+<mat-sidenav-container>
 
-<router-outlet></router-outlet>
+  <app-navigation></app-navigation>
 
-<hr>
-<strong>Footer</strong>
+  <router-outlet></router-outlet>
+
+  <app-footer></app-footer>
+
+</mat-sidenav-container>
