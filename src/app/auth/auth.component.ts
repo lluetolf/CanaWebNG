@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ActivatedRoute, Router} from "@angular/router";
+import {AuthService} from "./auth.service";
 
 @Component({
   selector: 'app-auth',
@@ -7,33 +9,41 @@ import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  showPasswordHint: boolean = false;
-  loginForm = this.builder.group({
-    username: ['', Validators.required],
-    password: ['',
-      [Validators.required, Validators.minLength(6)]
-    ]
-  });
+  form: FormGroup;
+  public loginInvalid = false;
+  private formSubmitAttempt = false;
+  private returnUrl: string;
 
+  constructor(
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private router: Router,
+    private authService: AuthService
+  ) {
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/game';
 
-
-
-  get username(): AbstractControl {
-    return this.loginForm.controls.username;
-  }
-
-  get password(): AbstractControl {
-    return this.loginForm.controls.password;
-  }
-
-  constructor(private builder: FormBuilder) { }
-
-  ngOnInit(): void {
+    this.form = this.fb.group({
+      username: ['', Validators.email],
+      password: ['', Validators.required]
+    });
   }
 
   login() {
-    const controls = this.loginForm.controls;
-    console.log('User: ' + controls.username.value);
-    console.log('Password: ' + controls.password.value);
+    const val = this.form.value;
+
+    if (val.username && val.password) {
+      this.authService.login(val.username, val.password)
+        .subscribe(
+          () => {
+            console.log("User is logged in");
+            this.router.navigateByUrl('/');
+          }
+        );
+    }
+  }
+
+  ngOnInit(): void {
   }
 }
+
+

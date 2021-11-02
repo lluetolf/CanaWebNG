@@ -1,16 +1,23 @@
-<p>auth works!</p>
-
-<form [formGroup]="loginForm" (ngSubmit)="login()">
-  <div>
-    <input type="text" name="username" placeholder="Username" formControlName="username">
-    <span class="help-block" *ngIf="username.touched && username.invalid">The username is not valid</span>
-  </div>
-  <div>
-    <input type="password" name="password" placeholder="Password" formControlName="password">
-    <span class="help-block" *ngIf="password.touched && password.errors?.required">The password is required</span>
-    <span class="help-block" *ngIf="password.touched && password.errors?.minlength">The password is too short</span>
-    <span *ngIf="showPasswordHint">Password should be minimum six characters long</span>
-  </div>
-  <button type="submit" [disabled]="!loginForm.valid">Login</button>
-  <div>You are trying to login as <b>{{this.username.value}}</b></div>
-</form>
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="login()">
+      <h2>Log In</h2>
+      <mat-error *ngIf="loginInvalid">
+        The username and password were not recognized
+      </mat-error>
+      <mat-form-field class="full-width-input">
+        <input matInput placeholder="Email" formControlName="username" required>
+        <mat-error>
+          Please provide a valid email address
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field class="full-width-input">
+        <input matInput type="password" placeholder="Password" formControlName="password" required>
+        <mat-error>
+          Please provide a valid password
+        </mat-error>
+      </mat-form-field>
+      <button mat-raised-button color="primary">Login</button>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -48,6 +48,8 @@ ng generate component auth --skip-tests
 ng generate guard auth/auth --skip-tests
 ng generate guard auth/confirm --skip-tests
 ng generate interceptor auth/auth  --skip-tests
+ng generate service auth/auth --skip-tests
+ng generate interface auth/user
 
 git add .
 git commit -m "Create   all components and services."
