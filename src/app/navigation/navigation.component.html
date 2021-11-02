@@ -7,7 +7,7 @@
       <a routerLink="/field" routerLinkActive="active">Field</a>
       <a routerLink="/payable" routerLinkActive="active">Payable</a>
       <a routerLink="/receivable" routerLinkActive="active">Receivable</a>
-      <a routerLink="/auth" routerLinkActive="active">Auth</a>
+      <a routerLink="/auth" routerLinkActive="active" *ngIf="notLoggedIn()">Auth</a>
     </nav>
 
     <span class="example-spacer"></span>

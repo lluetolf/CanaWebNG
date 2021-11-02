@@ -43,6 +43,10 @@ export class AuthComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.authService.isLoggedIn()) {
+      console.log("Already logged in, going to /.");
+      this.router.navigateByUrl('/');
+    }
   }
 }
 

@@ -10,7 +10,7 @@ import {AuthGuard} from "./auth/auth.guard";
 import {ConfirmGuard} from "./auth/confirm.guard";
 
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard], canDeactivate: [ConfirmGuard]},
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   { path: 'field', component: FieldComponent, canActivate: [AuthGuard]},
   { path: 'payable', component: PayableComponent, canActivate: [AuthGuard]},
   { path: 'receivable', component: ReceivableComponent, canActivate: [AuthGuard]},
