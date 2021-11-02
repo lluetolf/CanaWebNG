@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {FieldService} from "./field.service";
+import {Observable} from "rxjs";
+import {Field} from "./field.model";
 
 @Component({
   selector: 'app-field',
@@ -6,10 +9,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./field.component.scss']
 })
 export class FieldComponent implements OnInit {
+  allFields$!: Observable<Field[]>
 
-  constructor() { }
+  constructor(private fieldService: FieldService) { }
 
   ngOnInit(): void {
+    this.allFields$ = this.fieldService.getFields()
   }
 
 }

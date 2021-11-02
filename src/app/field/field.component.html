@@ -1,1 +1,5 @@
 <p>field works!</p>
+
+<ul>
+  <li *ngFor="let field of allFields$ | async">{{field.name}}</li>
+</ul>

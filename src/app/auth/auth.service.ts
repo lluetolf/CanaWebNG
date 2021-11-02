@@ -5,12 +5,13 @@ import { environment } from '../../environments/environment';
 import {shareReplay, tap} from "rxjs/operators";
 import * as moment from "moment";
 import {IAuthResponse} from "./IAuthResponse";
+import {LoggingService} from "../logging/logging.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private logger: LoggingService) {
   }
 
   public isLoggedIn() {
@@ -25,7 +26,7 @@ export class AuthService {
   login(username: string, password: string) {
     let payload = { email: username, password: password }
     let url = `${environment.apiBaseUri}/login`
-    console.log("URL: " + url)
+    this.logger.info("Call POST: " + url)
     return this.http.post<IAuthResponse>(url, payload)
       .pipe(
         tap(res => this.setSession(res)),
