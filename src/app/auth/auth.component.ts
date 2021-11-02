@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "./auth.service";
 
@@ -11,7 +11,7 @@ import {AuthService} from "./auth.service";
 export class AuthComponent implements OnInit {
   form: FormGroup;
   public loginInvalid = false;
-  private formSubmitAttempt = false;
+
   private returnUrl: string;
 
   constructor(
