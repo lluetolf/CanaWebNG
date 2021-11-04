@@ -2,11 +2,14 @@
 
   <mat-toolbar-row>
     <span class="mat-dialog-title main-title">CanaWeb.app</span>
-    <nav>
+    <nav *ngIf="!notLoggedIn()">
       <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
       <a routerLink="/field" routerLinkActive="active">Field</a>
       <a routerLink="/payable" routerLinkActive="active">Payable</a>
       <a routerLink="/receivable" routerLinkActive="active">Receivable</a>
+    </nav>
+
+    <nav *ngIf="notLoggedIn()">
       <a routerLink="/auth" routerLinkActive="active" *ngIf="notLoggedIn()">Auth</a>
     </nav>
 
@@ -14,7 +17,7 @@
     <button mat-icon-button class="example-icon" aria-label="Logout">
       <mat-icon>contact_support</mat-icon>
     </button>
-    <button mat-icon-button class="example-icon" aria-label="Logout">
+    <button mat-icon-button class="example-icon" aria-label="Logout" (click)="logout()">
       <mat-icon>logout</mat-icon>
     </button>
   </mat-toolbar-row>
