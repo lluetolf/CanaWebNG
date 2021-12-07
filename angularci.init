@@ -11,8 +11,8 @@ ng add @angular/material
 ng generate module material --module=app # copy content
 
 # Layout
-ng generate component navigation --skip-tests
-ng generate component footer --skip-tests
+ng generate component layout/navigation --skip-tests
+ng generate component layout/footer --skip-tests
 
 # Dashboard
 ng generate component dashboard --skip-tests

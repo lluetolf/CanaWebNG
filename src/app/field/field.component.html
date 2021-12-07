@@ -1,5 +1,8 @@
 <p>field works!</p>
 
 <ul>
-  <li *ngFor="let field of allFields$ | async">{{field.name}}</li>
+  <li *ngFor="let field of allFields$ | async">
+    {{field.name}}
+    <button mat-button color="primary" (click)="editField(field.id)">Edit</button>
+  </li>
 </ul>
