@@ -25,7 +25,7 @@ export class AuthService {
 
   login(username: string, password: string) {
     let payload = { email: username, password: password }
-    let url = `${environment.apiBaseUri}/login`
+    let url = `${environment.apiAuthUrl}/login`
     this.logger.info("Call POST: " + url)
     return this.http.post<IAuthResponse>(url, payload)
       .pipe(
