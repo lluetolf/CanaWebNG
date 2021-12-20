@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "./auth.service";
+import {LoggingService} from "../logging/logging.service";
 
 @Component({
   selector: 'app-auth',
@@ -11,6 +12,7 @@ import {AuthService} from "./auth.service";
 export class AuthComponent implements OnInit {
   form: FormGroup;
   public loginInvalid = false;
+  public errorMessage = null;
 
   private returnUrl: string;
 
@@ -18,7 +20,8 @@ export class AuthComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private logger: LoggingService
   ) {
     this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/game';
 
@@ -30,21 +33,27 @@ export class AuthComponent implements OnInit {
 
   login() {
     const val = this.form.value;
+    this.errorMessage = null;
 
     if (val.username && val.password) {
       this.authService.login(val.username, val.password)
-        .subscribe(
-          () => {
-            console.log("User is logged in");
+        .subscribe({
+          next: () => {
+            this.logger.info("User is logged in");
             this.router.navigateByUrl('/');
+          },
+          error: error => {
+            this.errorMessage = error.message
+            this.logger.error(error.message)
+            this.loginInvalid = true
           }
-        );
+        })
     }
   }
 
   ngOnInit(): void {
     if(this.authService.isLoggedIn()) {
-      console.log("Already logged in, going to /.");
+      this.logger.warn("Already logged in, going to /.");
       this.router.navigateByUrl('/');
     }
   }

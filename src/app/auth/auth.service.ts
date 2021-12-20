@@ -68,6 +68,11 @@ export class AuthService {
 
   getToken(): string {
     const token = localStorage.getItem("bearer_token");
-    return token == null ? "NO_TOKEN" : token;
+    if(token == null) {
+      this.logger.warn("Tried to fetch token, but no taken set. Try to login.")
+      return "NO_TOKEN"
+    } else {
+      return token;
+    }
   }
 }
