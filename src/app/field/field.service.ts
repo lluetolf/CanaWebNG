@@ -10,17 +10,34 @@ import {LoggingService} from "../logging/logging.service";
   providedIn: 'root'
 })
 export class FieldService {
-  fields$: Observable<Field[]>;
+  fields$!: Observable<Field[]>;
+  fetchedFieldTS!: Date;
 
   constructor(private http: HttpClient, private logger: LoggingService) {
+    this.fetchFields()
+  }
+
+  // Create a new Observable
+  private fetchFields() {
     const url = `${environment.apiAuthUrl}/fields`
-    this.logger.info("Call GET: " + url)
+    const ts = new Date()
+    this.logger.info("Call GET: " + url + " @ " + ts)
+    this.fetchedFieldTS = ts
+
     this.fields$ = this.http.get<Field[]>(url).pipe(
       shareReplay(1)
     )
   }
 
   getFields(): Observable<Field[]>{
+    const ts = new Date()
+
+    //use cache if less than 1min
+    const diff = ts.getTime() - this.fetchedFieldTS.getTime()
+    if( diff > 60 * 1000) {
+      this.logger.info("Refresh cache, diff: " + diff)
+      this.fetchFields()
+    }
     return this.fields$
   }
 

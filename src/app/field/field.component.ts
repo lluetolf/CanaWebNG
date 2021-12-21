@@ -12,19 +12,11 @@ import {filter} from "rxjs/operators";
   styleUrls: ['./field.component.scss']
 })
 export class FieldComponent implements OnInit {
-  allFields$!: Observable<Field[]>
 
   constructor(private fieldService: FieldService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.allFields$ = this.fieldService.getFields()
   }
 
-  editField(id: number) {
-    let dialogRef = this.dialog.open(EditFieldDialogComponent, {
-      height: '80%',
-      width: '80%',
-      data: { 'field': this.fieldService.getField(id)}
-    });
-  }
+
 }

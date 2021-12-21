@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Observable} from "rxjs";
 import {Field} from "../field.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
@@ -15,7 +15,8 @@ export class EditFieldDialogComponent implements OnInit {
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: {field: Observable<Field>},
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              public dialogRef: MatDialogRef<EditFieldDialogComponent>) {
 
   }
 
@@ -32,7 +33,10 @@ export class EditFieldDialogComponent implements OnInit {
     });
   }
 
-  edit() {
+  save() {
+  }
 
+  cancel() {
+    this.dialogRef.close()
   }
 }

@@ -22,6 +22,7 @@ import { NavigationComponent } from './layout/navigation/navigation.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./auth/auth.interceptor";
+import { FieldListComponent } from './field/field-list/field-list.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import {AuthInterceptor} from "./auth/auth.interceptor";
     AuthComponent,
     NavigationComponent,
     FooterComponent,
+    FieldListComponent,
   ],
   imports: [
     BrowserModule,
