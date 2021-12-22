@@ -3,7 +3,7 @@ import {FieldService} from "./field.service";
 import {Observable} from "rxjs";
 import {Field} from "./field.model";
 import {MatDialog} from "@angular/material/dialog";
-import {EditFieldDialogComponent} from "./edit-field-dialog/edit-field-dialog.component";
+import {EditFieldDialogComponent} from "./field-list/edit-field-dialog/edit-field-dialog.component";
 import {filter} from "rxjs/operators";
 
 @Component({

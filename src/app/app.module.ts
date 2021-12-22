@@ -10,9 +10,9 @@ import { EditPayableDialogComponent } from './payable/edit-payable-dialog/edit-p
 import { CreatePayableDialogComponent } from './payable/create-payable-dialog/create-payable-dialog.component';
 import { DeletePayableDialogComponent } from './payable/delete-payable-dialog/delete-payable-dialog.component';
 import { FieldComponent } from './field/field.component';
-import { CreateFieldDialogComponent } from './field/create-field-dialog/create-field-dialog.component';
-import { EditFieldDialogComponent } from './field/edit-field-dialog/edit-field-dialog.component';
-import { DeleteFieldDialogComponent } from './field/delete-field-dialog/delete-field-dialog.component';
+import { CreateFieldDialogComponent } from './field/field-list/create-field-dialog/create-field-dialog.component';
+import { EditFieldDialogComponent } from './field/field-list/edit-field-dialog/edit-field-dialog.component';
+import { DeleteFieldDialogComponent } from './field/field-list/delete-field-dialog/delete-field-dialog.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AuthComponent } from './auth/auth.component';
 import {ReactiveFormsModule} from "@angular/forms";

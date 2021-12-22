@@ -50,4 +50,15 @@ export class FieldService {
       })
     )
   }
+
+  update(id: number, params: any) {
+    const url = `${environment.apiAuthUrl}/fields/${id}`
+    return this.http.put(url, params);
+  }
+
+  create(params: any): Observable<Field> {
+    const url = `${environment.apiAuthUrl}/fields`
+    return this.http.post<Field>(url, params);
+
+  }
 }

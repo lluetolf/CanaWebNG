@@ -6,7 +6,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {EditFieldDialogComponent} from "../edit-field-dialog/edit-field-dialog.component";
+import {EditFieldDialogComponent} from "./edit-field-dialog/edit-field-dialog.component";
 
 @Component({
   selector: 'app-field-list',
@@ -24,7 +24,7 @@ export class FieldListComponent implements OnInit {
 
   ngOnInit(): void {
     this.allFields$ = this.fieldService.getFields()
-    this.allFields$ .subscribe(fields => {
+    this.allFields$.subscribe(fields => {
       this.dataSource.data = fields;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -37,9 +37,17 @@ export class FieldListComponent implements OnInit {
 
   openEditField(id: number) {
     let dialogRef = this.dialog.open(EditFieldDialogComponent, {
-      height: '80%',
-      width: '80%',
-      data: { 'field': this.fieldService.getField(id)}
+      width: '500px',
+      data: { 'fieldId': id},
+      backdropClass: 'backdropBackground',
+    });
+  }
+
+  openCreateField() {
+    let dialogRef = this.dialog.open(EditFieldDialogComponent, {
+      width: '500px',
+      data: { 'fieldId': null},
+      backdropClass: 'backdropBackground',
     });
   }
 }
