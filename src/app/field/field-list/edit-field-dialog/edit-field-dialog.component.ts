@@ -14,7 +14,6 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./edit-field-dialog.component.scss']
 })
 export class EditFieldDialogComponent implements OnInit {
-  initData!: Field;
   fieldForm!: FormGroup;
   loading = false;
   private isCreateMode!: boolean;
@@ -67,7 +66,7 @@ export class EditFieldDialogComponent implements OnInit {
   }
 
   private update() {
-    this.fieldService.update(this.initData.id, this.fieldForm.value)
+    this.fieldService.update(this.fieldId, this.fieldForm.value)
       .pipe(first())
       .subscribe({
         next: () => {
@@ -82,7 +81,6 @@ export class EditFieldDialogComponent implements OnInit {
   }
 
   cancel() {
-    //TODO: fix error ID not set being raised
     this.dialogRef.close()
   }
 

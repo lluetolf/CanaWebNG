@@ -37,7 +37,9 @@
       <div class="example-container">
         <mat-form-field appearance="fill">
           <mat-label>AcquisitionDate</mat-label>
-          <input matInput formControlName="acquisitionDate">
+          <input matInput [matDatepicker]="picker" formControlName="acquisitionDate">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
       </div>
       <div class="example-container">

@@ -41,7 +41,7 @@ import { FieldListComponent } from './field/field-list/field-list.component';
     AuthComponent,
     NavigationComponent,
     FooterComponent,
-    FieldListComponent,
+    FieldListComponent
   ],
   imports: [
     BrowserModule,
