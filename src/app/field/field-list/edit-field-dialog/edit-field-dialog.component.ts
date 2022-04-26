@@ -1,7 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Observable} from "rxjs";
-import {Field} from "../../field.model";
 import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {FieldService} from "../../field.service";
 import {first} from "rxjs/operators";
