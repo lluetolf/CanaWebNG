@@ -6,7 +6,11 @@ service: canaweb-ui
 
 handlers:
   - url: /
-    static_files: dist/cloud-run-test-app/index.html
-    upload: dist/cloud-run-test-app/index.html
+    static_files: dist/CanaWebNG/index.html
+    upload: dist/CanaWebNG/index.html
   - url: /
-    static_dir: dist/cloud-run-test-app
+    static_dir: dist/CanaWebNG
+
+
+# gcloud app deploy --project=dev-canaweb-firestore
+
