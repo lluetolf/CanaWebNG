@@ -18,7 +18,7 @@ export class AuthInterceptor implements HttpInterceptor {
     this.logger.info("Intercept and add Bearer token.")
     request = request.clone({
       setHeaders: {
-        Authorization: `Bearer ${ this.authService.getToken()}`
+        Authorization: `Bearer ${ this.authService.accessToken}`
       }
     });
     return next.handle(request);

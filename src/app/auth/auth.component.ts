@@ -37,22 +37,24 @@ export class AuthComponent implements OnInit {
 
     if (val.username && val.password) {
       this.authService.login(val.username, val.password)
-        .subscribe({
-          next: () => {
-            this.logger.info("User is logged in");
-            this.router.navigateByUrl('/');
-          },
-          error: error => {
-            this.errorMessage = error.message
-            this.logger.error(error.message)
+        .then(
+          () => {
+            this.logger.info("User is logged in")
+            this.router.navigateByUrl("/dashboard")
+          }
+        ).catch(
+          err => {
+            this.errorMessage = err.message
+            this.logger.error(err.message)
             this.loginInvalid = true
           }
-        })
+      )
+
     }
   }
 
   ngOnInit(): void {
-    if(this.authService.isLoggedIn()) {
+    if(this.authService.isLoggedIn) {
       this.logger.warn("Already logged in, going to /.");
       this.router.navigateByUrl('/');
     }

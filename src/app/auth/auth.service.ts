@@ -1,78 +1,102 @@
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+import {
+  AngularFirestore,
+  AngularFirestoreDocument,
+} from "@angular/fire/compat/firestore";
 
 import { environment } from '../../environments/environment';
 import {shareReplay, tap} from "rxjs/operators";
 import * as moment from "moment";
 import {IAuthResponse} from "./IAuthResponse";
 import {LoggingService} from "../logging/logging.service";
+import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {Router} from "@angular/router";
+import {User} from "./user";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient, private logger: LoggingService) {
-  }
 
-  public isLoggedIn() {
-    return moment().isBefore(this.getExpiration());
-  }
+  userData: any;
+  loggedInUser: User = {
+    uid: "",
+    email: "",
+    displayName: "",
+    photoURL: "",
+    emailVerified: false,
+    accessToken: ""
+  };
 
-  isLoggedOut() {
-    return !this.isLoggedIn();
-  }
-
-
-  login(username: string, password: string) {
-    let payload = { email: username, password: password }
-    let url = `${environment.apiAuthUrl}/login`
-    this.logger.info("Call POST: " + url)
-    return this.http.post<IAuthResponse>(url, payload)
-      .pipe(
-        tap(res => this.setSession(res)),
-        shareReplay()
-      )
-  }
-
-  private setSession(authResult: IAuthResponse) {
-    let token = authResult.bearer_token != null ? authResult.bearer_token : authResult.accessToken;
-    if (token != undefined) {
-      let expiresAt = null;
-      if(authResult.expires_at == undefined) {
-        expiresAt = moment().add(60*60,'second');
+  constructor(
+    private http: HttpClient,
+    private logger: LoggingService,
+    public afs: AngularFirestore, // Inject Firestore service
+    public afAuth: AngularFireAuth, // Inject Firebase auth service
+    public router: Router,
+    public ngZone: NgZone // NgZone service to remove outside scope warning
+  ) {
+    this.afAuth.authState.subscribe((user) => {
+      if (user) {
+        this.userData = user;
+        this.SetUserData(user)
+        localStorage.setItem('user', JSON.stringify(this.userData));
+        JSON.parse(localStorage.getItem('user')!);
       } else {
-        expiresAt = moment().add(authResult.expires_at,'second');
+        localStorage.setItem('user', 'null');
+        JSON.parse(localStorage.getItem('user')!);
       }
-
-      localStorage.setItem('bearer_token', token);
-      localStorage.setItem("expires_at", JSON.stringify(expiresAt.valueOf()) );
-    }
+    });
   }
+
+  get isLoggedIn(): boolean {
+    const user = JSON.parse(localStorage.getItem('user')!);
+    return user !== null;
+  }
+
+  get isLoggedOut(): boolean {
+    return !this.isLoggedIn;
+  }
+
+
+  login(email: string, password: string) {
+    this.logger.info("Authenticating: " + email)
+    return this.afAuth
+      .signInWithEmailAndPassword(email, password)
+      .then((result) => {
+        this.SetUserData(result.user);
+      })
+      .catch((error) => {
+        window.alert(error.message);
+      });
+  }
+
+  SetUserData(user: any) {
+    const userData: User = {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      photoURL: user.photoURL,
+      emailVerified: user.emailVerified,
+      accessToken: user._delegate.accessToken
+    };
+    this.loggedInUser = userData;
+  }
+
 
   logout() {
-    this.http.post<any>(`${environment.apiBaseUri}/logout`, {});
-    // remove user from local storage to log user out
-    localStorage.removeItem('bearer_token');
-    localStorage.removeItem('expires_at');
+    return this.afAuth.signOut().then(() => {
+      localStorage.removeItem('user');
+      this.router.navigate(['auth']);
+    });
   }
 
-  getExpiration() {
-    const expiration = localStorage.getItem("expires_at");
-    if( expiration != null) {
-      const expiresAt = JSON.parse(expiration);
-      return moment(expiresAt);
-    } else {
-      return 0;
-    }
+  get expirationTime() {
+    return undefined;
   }
 
-  getToken(): string {
-    const token = localStorage.getItem("bearer_token");
-    if(token == null) {
-      this.logger.warn("Tried to fetch token, but no taken set. Try to login.")
-      return "NO_TOKEN"
-    } else {
-      return token;
-    }
+  get accessToken(): string {
+    return this.loggedInUser.accessToken;
   }
 }
