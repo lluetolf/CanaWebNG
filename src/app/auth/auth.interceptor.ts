@@ -15,10 +15,11 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthService, private logger: LoggingService) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.logger.info("Intercept and add Bearer token.")
+    this.logger.info(
+      "Intercept and add Bearer token. [" + this.authService.accessToken.substr(0, 16) + "]")
     request = request.clone({
       setHeaders: {
-        Authorization: `Bearer ${ this.authService.accessToken}`
+        Authorization: `Bearer ${ this.authService.accessToken }`
       }
     });
     return next.handle(request);

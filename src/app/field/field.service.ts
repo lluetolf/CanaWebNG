@@ -19,7 +19,7 @@ export class FieldService {
 
   // Create a new Observable
   private fetchFields() {
-    const url = `${environment.apiAuthUrl}/fields`
+    const url = `${environment.apiBaseUri}/field`
     const ts = new Date()
     this.logger.info("Call GET: " + url + " @ " + ts)
     this.fetchedFieldTS = ts
@@ -52,12 +52,12 @@ export class FieldService {
   }
 
   update(id: number, params: any) {
-    const url = `${environment.apiAuthUrl}/fields/${id}`
+    const url = `${environment.apiBaseUri}/fields/${id}`
     return this.http.put(url, params);
   }
 
   create(params: any): Observable<Field> {
-    const url = `${environment.apiAuthUrl}/fields`
+    const url = `${environment.apiBaseUri}/fields`
     return this.http.post<Field>(url, params);
 
   }

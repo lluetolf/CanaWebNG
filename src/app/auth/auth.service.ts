@@ -2,13 +2,9 @@ import {Injectable, NgZone} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {
   AngularFirestore,
-  AngularFirestoreDocument,
 } from "@angular/fire/compat/firestore";
 
-import { environment } from '../../environments/environment';
-import {shareReplay, tap} from "rxjs/operators";
-import * as moment from "moment";
-import {IAuthResponse} from "./IAuthResponse";
+
 import {LoggingService} from "../logging/logging.service";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {Router} from "@angular/router";
@@ -40,8 +36,8 @@ export class AuthService {
     this.afAuth.authState.subscribe((user) => {
       if (user) {
         this.userData = user;
-        this.SetUserData(user)
-        localStorage.setItem('user', JSON.stringify(this.userData));
+        this.SetLoggedInUser(user)
+        localStorage.setItem('user', JSON.stringify(this.loggedInUser));
         JSON.parse(localStorage.getItem('user')!);
       } else {
         localStorage.setItem('user', 'null');
@@ -52,7 +48,7 @@ export class AuthService {
 
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user')!);
-    return user !== null;
+    return user !== null || this.loggedInUser.accessToken != "";
   }
 
   get isLoggedOut(): boolean {
@@ -65,14 +61,15 @@ export class AuthService {
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.SetUserData(result.user);
+        this.SetLoggedInUser(result.user);
       })
       .catch((error) => {
-        window.alert(error.message);
+        this.logger.error(error.message);
+        throw error;
       });
   }
 
-  SetUserData(user: any) {
+  SetLoggedInUser(user: any) {
     const userData: User = {
       uid: user.uid,
       email: user.email,
@@ -87,6 +84,15 @@ export class AuthService {
 
   logout() {
     return this.afAuth.signOut().then(() => {
+      const tmp: User = {
+        uid: "",
+        email: "",
+        displayName: "",
+        photoURL: "",
+        emailVerified: false,
+        accessToken: ""
+      };
+      this.loggedInUser = tmp;
       localStorage.removeItem('user');
       this.router.navigate(['auth']);
     });
