@@ -30,13 +30,12 @@ export class AuthService {
     private logger: LoggingService,
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
-    public router: Router,
-    public ngZone: NgZone // NgZone service to remove outside scope warning
+    public router: Router
   ) {
     this.afAuth.authState.subscribe((user) => {
       if (user) {
         this.userData = user;
-        this.SetLoggedInUser(user)
+        this.setLoggedInUser(user)
         localStorage.setItem('user', JSON.stringify(this.loggedInUser));
         JSON.parse(localStorage.getItem('user')!);
       } else {
@@ -44,7 +43,13 @@ export class AuthService {
         JSON.parse(localStorage.getItem('user')!);
       }
     });
+    var tmp = localStorage.getItem("user")
+    if(tmp) {
+      this.setLoggedInUser(JSON.parse(tmp));
+    }
   }
+
+
 
   get isLoggedIn(): boolean {
     const user = JSON.parse(localStorage.getItem('user')!);
@@ -61,7 +66,7 @@ export class AuthService {
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.SetLoggedInUser(result.user);
+        this.setLoggedInUser(result.user);
       })
       .catch((error) => {
         this.logger.error(error.message);
@@ -69,14 +74,14 @@ export class AuthService {
       });
   }
 
-  SetLoggedInUser(user: any) {
+  setLoggedInUser(user: any) {
     const userData: User = {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
       photoURL: user.photoURL,
       emailVerified: user.emailVerified,
-      accessToken: user._delegate.accessToken
+      accessToken: user._delegate?.accessToken || user.accessToken
     };
     this.loggedInUser = userData;
   }

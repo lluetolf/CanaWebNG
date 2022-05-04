@@ -34,7 +34,6 @@ export class AuthComponent implements OnInit {
   }
 
   login() {
-
     this.errorMessage = null;
     if (this.form.valid) {
       const val = this.form.value;

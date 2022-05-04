@@ -1,6 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
+import { environment } from '../../environments/environment';
 import {Field} from "./field.model";
 import {EMPTY, Observable} from "rxjs";
 import {filter, first, shareReplay, map} from "rxjs/operators";
@@ -19,7 +19,7 @@ export class FieldService {
 
   // Create a new Observable
   private fetchFields() {
-    const url = `${environment.apiBaseUri}/field`
+    const url = `${environment.apiBaseUri}/fields`
     const ts = new Date()
     this.logger.info("Call GET: " + url + " @ " + ts)
     this.fetchedFieldTS = ts
