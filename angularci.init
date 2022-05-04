@@ -15,6 +15,7 @@ ng generate component layout/navigation --skip-tests
 ng generate component layout/footer --skip-tests
 
 # Dashboard
+ng generate module dashboard
 ng generate component dashboard --skip-tests
 ng generate service dashboard/dashboard --skip-tests
 
@@ -22,11 +23,13 @@ ng generate service dashboard/dashboard --skip-tests
 ng generate component page-not-found --skip-tests
 
 # Receivable
+ng generate module receivable
 ng generate component receivable --skip-tests
 ng generate service receivable/receivable --skip-tests
 ng generate interface receivable/receivable.model
 
 # payable
+ng generate module payable
 ng generate component payable --skip-tests
 ng generate component payable/edit-payable-dialog --skip-tests
 ng generate component payable/create-payable-dialog --skip-tests
@@ -36,15 +39,18 @@ ng generate interface payable/payable.model
 
 
 # Field
+ng generate module field
 ng generate component field --skip-tests
 ng generate component field/create-field-dialog --skip-tests
 ng generate component field/edit-field-dialog --skip-tests
 ng generate component field/delete-field-dialog --skip-tests
 ng generate component field/field-list --skip-tests
 ng generate service field/field --skip-tests
+
 ng generate interface field/field.model
 
 # Auth and HTTP interceptor
+ng generate module auth
 ng generate component auth --skip-tests
 ng generate guard auth/auth --skip-tests
 ng generate guard auth/confirm --skip-tests

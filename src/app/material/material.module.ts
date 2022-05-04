@@ -43,6 +43,9 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 // Material Date
 import { MatNativeDateModule } from '@angular/material/core';
+import {BrowserModule} from "@angular/platform-browser";
+import {ReactiveFormsModule} from "@angular/forms";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 @NgModule({
   declarations: [],
   imports: [
@@ -82,7 +85,11 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    CommonModule,
+    BrowserModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
   ],
   exports: [
     MatAutocompleteModule,
@@ -120,7 +127,11 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatPaginatorModule,
     MatSortModule,
     MatTableModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    CommonModule,
+    BrowserModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
   ]
 })
 export class MaterialModule { }
