@@ -1,51 +1,64 @@
 <div>
-  <mat-form-field class="search-input-full-width">
+  <mat-form-field class="data-table-search-input">
     <input matInput #inputBox
       (keyup)="applyFilter(inputBox.value)"
       placeholder="Search here"
     />
   </mat-form-field>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
+
+   <mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
     <ng-container matColumnDef="id">
-      <th mat-header-cell *matHeaderCellDef> Id</th>
-      <td mat-cell *matCellDef="let field"> {{field.id}} </td>
+      <mat-header-cell *matHeaderCellDef> Id</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{field.id}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef> Name</th>
-      <td mat-cell *matCellDef="let field"> {{field.name}} </td>
+      <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{field.name}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="ownerId">
-      <th mat-header-cell *matHeaderCellDef> OwnerId</th>
-      <td mat-cell *matCellDef="let field"> {{field.ownerId}} </td>
+      <mat-header-cell *matHeaderCellDef> OwnerId</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{field.ownerId}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="size">
-      <th mat-header-cell *matHeaderCellDef> Size</th>
-      <td mat-cell *matCellDef="let field"> {{field.size}} </td>
+      <mat-header-cell *matHeaderCellDef> Size</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{field.size}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="cultivatedArea">
-      <th mat-header-cell *matHeaderCellDef> CultivatedArea</th>
-      <td mat-cell *matCellDef="let field"> {{field.cultivatedArea}} </td>
+      <mat-header-cell *matHeaderCellDef> CultivatedArea</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{field.cultivatedArea}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="acquisitionDate">
-      <th mat-header-cell *matHeaderCellDef> AcquisitionDate</th>
-      <td mat-cell *matCellDef="let field"> {{field.acquisitionDate | date: 'dd.MM.yyyy'}} </td>
+      <mat-header-cell *matHeaderCellDef> AcquisitionDate</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{field.acquisitionDate | date: 'dd.MM.yyyy'}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="ingenioId">
-      <th mat-header-cell *matHeaderCellDef> IngenioId</th>
-      <td mat-cell *matCellDef="let field"> {{field.ingenioId}} </td>
+      <mat-header-cell *matHeaderCellDef> IngenioId</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{field.ingenioId}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="operations">
-      <th mat-header-cell *matHeaderCellDef>  </th>
-      <td mat-cell *matCellDef="let field">
-        <button mat-button color="primary" (click)="openEditField(field.id)">Edit</button>
-        <button mat-button color="accent">Delete</button>
-      </td>
+      <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
+      <mat-cell *matCellDef="let field">
+        <button mat-icon-button color="primary" (click)="openEditField(field.id)">
+          <mat-icon> edit </mat-icon>
+        </button>
+        <button mat-icon-button color="accent">
+          <mat-icon> delete </mat-icon>
+        </button>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="creater">
+      <mat-footer-cell *matFooterCellDef>
+        <button mat-raised-button color="primary">Create</button>
+      </mat-footer-cell>
     </ng-container>
 
 
-    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-    <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
-  </table>
+    <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+    <mat-footer-row *matFooterRowDef="footerColumnsToDisplay"></mat-footer-row>
+    <mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></mat-row>
+  </mat-table>
+
   <mat-paginator [pageSizeOptions]="[8, 16, 32]"
                  showFirstLastButtons
                  aria-label="Select page of periodic elements">

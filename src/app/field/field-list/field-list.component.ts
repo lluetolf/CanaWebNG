@@ -16,6 +16,7 @@ import {EditFieldDialogComponent} from "./edit-field-dialog/edit-field-dialog.co
 export class FieldListComponent implements OnInit {
   allFields$!: Observable<Field[]>
   columnsToDisplay = ['id', 'name', 'ownerId', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
+  footerColumnsToDisplay = ['creater'];
   dataSource = new MatTableDataSource<Field>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -39,7 +40,6 @@ export class FieldListComponent implements OnInit {
     let dialogRef = this.dialog.open(EditFieldDialogComponent, {
       width: '500px',
       data: { 'fieldId': id},
-      backdropClass: 'backdropBackground',
     });
   }
 
@@ -47,7 +47,6 @@ export class FieldListComponent implements OnInit {
     let dialogRef = this.dialog.open(EditFieldDialogComponent, {
       width: '500px',
       data: { 'fieldId': null},
-      backdropClass: 'backdropBackground',
     });
   }
 }

@@ -3,3 +3,36 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+/* MAT Table styling */
+.data-table {
+  width: 100%;
+  .mat-column-creater {
+    justify-content: center;
+  }
+  .mat-column-operations {
+    max-width: 100px;
+  }
+  .mat-cell,
+  .mat-header-cell {
+    padding-left: 10px;
+
+    &:first-child {
+      width: 32px;
+      border-right: 1px solid currentColor;
+      padding-right: 10px;
+      text-align: center;
+    }
+  }
+}
+
+
+
+.data-table-search-input {
+  width: 90%;
+  padding-left: 1%;
+  padding-right: 9%;
+}
+
+
