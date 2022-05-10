@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-edit-payable-dialog',
   templateUrl: './edit-payable-dialog.component.html',
   styleUrls: ['./edit-payable-dialog.component.scss']
 })
-export class EditPayableDialogComponent implements OnInit {
+export class EditPayableDialogComponent {
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

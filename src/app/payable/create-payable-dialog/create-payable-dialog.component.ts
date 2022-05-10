@@ -5,11 +5,8 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './create-payable-dialog.component.html',
   styleUrls: ['./create-payable-dialog.component.scss']
 })
-export class CreatePayableDialogComponent implements OnInit {
+export class CreatePayableDialogComponent {
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
 
 }

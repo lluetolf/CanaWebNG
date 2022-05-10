@@ -7,6 +7,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {EditFieldDialogComponent} from "./edit-field-dialog/edit-field-dialog.component";
+import {DeleteFieldDialogComponent} from "./delete-field-dialog/delete-field-dialog.component";
 
 @Component({
   selector: 'app-field-list',
@@ -46,7 +47,19 @@ export class FieldListComponent implements OnInit {
   openCreateField() {
     let dialogRef = this.dialog.open(EditFieldDialogComponent, {
       width: '500px',
-      data: { 'fieldId': null},
+      data: {'fieldId': null},
     });
   }
+
+  openConfirmDelete(id: number) {
+    let dialogRef = this.dialog.open(DeleteFieldDialogComponent, {
+      width: '500px',
+      disableClose: false
+    });
+    dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
+    dialogRef.componentInstance.fieldId = id
+
+  }
+
+
 }

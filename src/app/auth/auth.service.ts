@@ -37,14 +37,12 @@ export class AuthService {
         this.userData = user;
         this.setLoggedInUser(user)
         localStorage.setItem('user', JSON.stringify(this.loggedInUser));
-        JSON.parse(localStorage.getItem('user')!);
       } else {
-        localStorage.setItem('user', 'null');
-        JSON.parse(localStorage.getItem('user')!);
+        localStorage.removeItem("user")
       }
     });
     var tmp = localStorage.getItem("user")
-    if(tmp) {
+    if(tmp && tmp != "null") {
       this.setLoggedInUser(JSON.parse(tmp));
     }
   }

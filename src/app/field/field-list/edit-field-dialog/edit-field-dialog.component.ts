@@ -14,22 +14,22 @@ import {ActivatedRoute} from "@angular/router";
 export class EditFieldDialogComponent implements OnInit {
   fieldForm!: FormGroup;
   loading = false;
+  title = ""
   private isCreateMode!: boolean;
   private fieldId!: number;
+  errorMsg: string | undefined = undefined;
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: {fieldId: number},
               private fb: FormBuilder,
-              private route: ActivatedRoute,
               private fieldService: FieldService,
               private logger: LoggingService,
               public dialogRef: MatDialogRef<EditFieldDialogComponent>) {
-
   }
 
   ngOnInit(): void {
     this.fieldId = this.data.fieldId
-    this.isCreateMode = !this.fieldId;
+    this.isCreateMode = this.fieldId == null;
     this.logger.debug(`ID: ${this.fieldId} and CreateMode: ${this.isCreateMode}`)
 
     //TODO valided dates and improve HTML form.
@@ -43,7 +43,11 @@ export class EditFieldDialogComponent implements OnInit {
       lastUpdated: ['', Validators.required],
     });
 
-    if(!this.isCreateMode) {
+    if(this.isCreateMode) {
+      this.title = "Create Field"
+      this.fieldForm.controls['lastUpdated'].setValue(new Date())
+    } else {
+      this.title = "Edit Field"
       this.fieldService.getField(this.fieldId)
         .pipe(first())
         .subscribe(x => this.fieldForm.patchValue(x!));
@@ -73,6 +77,7 @@ export class EditFieldDialogComponent implements OnInit {
         },
         error: error => {
           this.logger.error(error)
+          this.errorMsg = (error.message) ? error.message : (error.status) ? `${error.status} - ${error.statusText}` : 'Server error';
           this.loading = false;
         }
       });

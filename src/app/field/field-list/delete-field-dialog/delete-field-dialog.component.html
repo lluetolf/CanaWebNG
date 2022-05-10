@@ -1,1 +1,13 @@
-<p>delete-field-dialog works!</p>
+<mat-card>
+  <mat-card-content>
+    <h1 md-dialog-title>Confirm</h1>
+    <div md-dialog-content>{{confirmMessage}}</div>
+  </mat-card-content>
+  <mat-card-content>
+    <button md-button style="color: #fff;background-color: #153961;" (click)="delete()">Confirm</button>
+    <button md-button (click)="dialogRef.close()">Cancel</button>
+  </mat-card-content>
+  <mat-card-content *ngIf="errorMsg">
+    {{errorMsg}}
+  </mat-card-content>
+</mat-card>
