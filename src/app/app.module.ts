@@ -15,6 +15,7 @@ import {FieldModule} from "./field/field.module";
 import {PayableModule} from "./payable/payable.module";
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {AuthModule} from "./auth/auth.module";
+import {CacheInterceptor} from "./global/cache.interceptor";
 
 @NgModule({
   declarations: [
@@ -37,9 +38,15 @@ import {AuthModule} from "./auth/auth.module";
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
+      useClass: CacheInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
     }
+
   ],
   bootstrap: [AppComponent]
 })

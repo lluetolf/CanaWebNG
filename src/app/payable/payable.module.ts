@@ -6,6 +6,8 @@ import {CreatePayableDialogComponent} from "./create-payable-dialog/create-payab
 import {DeletePayableDialogComponent} from "./delete-payable-dialog/delete-payable-dialog.component";
 import {MaterialModule} from "../material/material.module";
 import {HttpClientModule} from "@angular/common/http";
+import { PayableListComponent } from './payable-list/payable-list.component';
+import { PayableDateSelectorComponent } from './payable-date-selector/payable-date-selector.component';
 
 
 
@@ -15,6 +17,8 @@ import {HttpClientModule} from "@angular/common/http";
     EditPayableDialogComponent,
     CreatePayableDialogComponent,
     DeletePayableDialogComponent,
+    PayableListComponent,
+    PayableDateSelectorComponent,
   ],
   imports: [
     MaterialModule,

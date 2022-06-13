@@ -7,8 +7,13 @@
 ng new CanaWebNG --routing --style scss --commit
 cd CanaWebNG
 npm install angular-in-memory-web-api --save-dev
+npm install dayjs
 ng add @angular/material
 ng generate module material --module=app # copy content
+
+# Generic
+ng generate interceptor global/cache  --skip-tests
+ng generate interface global/base-entity
 
 # Layout
 ng generate component layout/navigation --skip-tests
@@ -31,6 +36,8 @@ ng generate interface receivable/receivable.model
 # payable
 ng generate module payable
 ng generate component payable --skip-tests
+ng generate component payable/payable-list --skip-tests
+ng generate component payable/payable-date-selector --skip-tests
 ng generate component payable/edit-payable-dialog --skip-tests
 ng generate component payable/create-payable-dialog --skip-tests
 ng generate component payable/delete-payable-dialog --skip-tests
@@ -45,7 +52,7 @@ ng generate component field/create-field-dialog --skip-tests
 ng generate component field/edit-field-dialog --skip-tests
 ng generate component field/delete-field-dialog --skip-tests
 ng generate component field/field-list --skip-tests
-ng generate service field/field --skip-tests
+ng generate service field/field --skip-test
 
 ng generate interface field/field.model
 

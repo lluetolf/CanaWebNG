@@ -25,7 +25,7 @@ export class FieldListComponent implements OnInit {
   constructor(private fieldService: FieldService, public dialog: MatDialog) { }
 
   ngOnInit(): void {
-    this.allFields$ = this.fieldService.getFields()
+    this.allFields$ = this.fieldService.fields
     this.allFields$.subscribe(fields => {
       this.dataSource.data = fields;
       this.dataSource.paginator = this.paginator;

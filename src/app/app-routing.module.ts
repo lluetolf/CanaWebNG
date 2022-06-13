@@ -7,7 +7,6 @@ import {PayableComponent} from "./payable/payable.component";
 import {ReceivableComponent} from "./receivable/receivable.component";
 import {AuthComponent} from "./auth/auth.component";
 import {AuthGuard} from "./auth/auth.guard";
-import {ConfirmGuard} from "./auth/confirm.guard";
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
