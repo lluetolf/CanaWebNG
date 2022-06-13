@@ -11,19 +11,21 @@ import {LoggingService} from "../logging/logging.service";
 })
 export class FieldService {
 
+  private _fields$ = new BehaviorSubject<Field[]>([]);
+
   public get fields(): Observable<Field[]> {
-    const fields$ = this.getFields()
-    return fields$
+    return this._fields$.asObservable()
   }
 
-  public set fields(Field) {
+  private set fields(fields$) {
+    fields$.subscribe(fields => this._fields$.next(fields))
   }
 
   constructor(private http: HttpClient,
               private logger: LoggingService) {
   }
 
-  getFields() {
+  refreshFields() {
     const url = `${environment.apiBaseUri}/fields`
     this.logger.info("Fetching date from: " + url)
     let fields$ = this.http.get<Field[]>(url).pipe(
@@ -31,12 +33,7 @@ export class FieldService {
           (fields: Field[]) => fields.map(field => { field.acquisitionDate = this.createDateAsUTC(field.acquisitionDate); return field}),
         )
       );
-
-    if(fields$) {
-      return fields$
-    } else {
-      return of([])
-    }
+    this.fields = fields$
   }
 
   getField(id: number): Observable<Field | null> {
@@ -63,7 +60,7 @@ export class FieldService {
     return this.http.put(url, field).pipe(
       map(x => {
         // this.fieldCacheService.clearCache()
-        this.getFields()
+        this.refreshFields()
         return x;
       })
     )
@@ -94,4 +91,6 @@ export class FieldService {
   private convertDateToUTC(date: Date): Date {
     return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
   }
+
+
 }

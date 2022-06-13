@@ -8,6 +8,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {EditFieldDialogComponent} from "./edit-field-dialog/edit-field-dialog.component";
 import {DeleteFieldDialogComponent} from "./delete-field-dialog/delete-field-dialog.component";
+import {LoggingService} from "../../logging/logging.service";
 
 @Component({
   selector: 'app-field-list',
@@ -22,15 +23,20 @@ export class FieldListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
-  constructor(private fieldService: FieldService, public dialog: MatDialog) { }
+  constructor(
+    private fieldService: FieldService,
+    public dialog: MatDialog,
+    private logger: LoggingService) { }
 
   ngOnInit(): void {
+    this.logger.info("Init FieldListComponent")
     this.allFields$ = this.fieldService.fields
     this.allFields$.subscribe(fields => {
       this.dataSource.data = fields;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
+    this.fieldService.refreshFields()
   }
 
   applyFilter(filterValue: string) {
