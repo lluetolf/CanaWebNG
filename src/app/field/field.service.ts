@@ -1,5 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import { environment } from '../../environments/environment';
 import {Field} from "./field.model";
 import {BehaviorSubject, EMPTY, Observable, of} from "rxjs";
@@ -12,6 +12,7 @@ import {LoggingService} from "../logging/logging.service";
 export class FieldService {
 
   private _fields$ = new BehaviorSubject<Field[]>([]);
+  readonly concepts = ["AGROQUIMICOS", "COMIDA", "COSECHA", "FERTILIANTES", "GASOLINA", "MANO DE OBRA"]
 
   public get fields(): Observable<Field[]> {
     return this._fields$.asObservable()
@@ -21,14 +22,15 @@ export class FieldService {
     fields$.subscribe(fields => this._fields$.next(fields))
   }
 
+
   constructor(private http: HttpClient,
               private logger: LoggingService) {
   }
 
-  refreshFields() {
+  refreshFields(reset: boolean = false) {
     const url = `${environment.apiBaseUri}/fields`
     this.logger.info("Fetching date from: " + url)
-    let fields$ = this.http.get<Field[]>(url).pipe(
+    let fields$ = this.http.get<Field[]>(url, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
       map(
           (fields: Field[]) => fields.map(field => { field.acquisitionDate = this.createDateAsUTC(field.acquisitionDate); return field}),
         )
@@ -59,8 +61,6 @@ export class FieldService {
     this.logger.info("Updating Field with id: " + id)
     return this.http.put(url, field).pipe(
       map(x => {
-        // this.fieldCacheService.clearCache()
-        this.refreshFields()
         return x;
       })
     )

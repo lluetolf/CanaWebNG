@@ -30,7 +30,8 @@ export class CacheInterceptor implements HttpInterceptor {
     }
 
     // Check for forced reset
-    if(request.headers.get("reset")) {
+    if(request.headers.get("reset") &&  request.headers.get("reset") === "true") {
+      this.logger.info("Rest cache for: " + request.url)
       this.cache.delete(request.url)
     }
 

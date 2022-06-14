@@ -72,6 +72,7 @@ export class EditFieldDialogComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: () => {
+          this.fieldService.refreshFields(true)
           this.logger.info('Update successful')
           this.dialogRef.close()
         },
@@ -93,6 +94,7 @@ export class EditFieldDialogComponent implements OnInit {
       .subscribe({
         next: f => {
           this.logger.info(`Created successful with id:${f.id}`)
+          this.fieldService.refreshFields(true)
           this.dialogRef.close()
         },
         error: error => {
