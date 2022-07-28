@@ -11,7 +11,7 @@ import {first} from "rxjs/operators";
 })
 export class DeleteFieldDialogComponent {
   public confirmMessage!: string;
-  public fieldId!: number;
+  public fieldName!: string;
   public errorMsg: string = "";
 
   constructor(public dialogRef: MatDialogRef<DeleteFieldDialogComponent>,
@@ -19,11 +19,12 @@ export class DeleteFieldDialogComponent {
   private logger: LoggingService) { }
 
   public delete() {
-    this.fieldService.delete(this.fieldId)
+    this.fieldService.delete(this.fieldName)
       .pipe(first())
       .subscribe({
         next: () => {
           this.logger.info('Delete successful')
+          this.fieldService.refreshData(true)
           this.dialogRef.close()
         },
         error: error => {

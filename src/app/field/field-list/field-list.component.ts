@@ -17,7 +17,7 @@ import {LoggingService} from "../../logging/logging.service";
 })
 export class FieldListComponent implements OnInit {
   allFields$!: Observable<Field[]>
-  columnsToDisplay = ['id', 'name', 'ownerId', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
+  columnsToDisplay = ['id', 'name', 'owner', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
   footerColumnsToDisplay = ['creater'];
   dataSource = new MatTableDataSource<Field>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -30,40 +30,40 @@ export class FieldListComponent implements OnInit {
 
   ngOnInit(): void {
     this.logger.info("Init FieldListComponent")
-    this.allFields$ = this.fieldService.fields
+    this.allFields$ = this.fieldService.data$
     this.allFields$.subscribe(fields => {
       this.dataSource.data = fields;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
     });
-    this.fieldService.refreshFields()
+    this.fieldService.refreshData()
   }
 
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  openEditField(id: number) {
+  openEditField(fieldName: string) {
     let dialogRef = this.dialog.open(EditFieldDialogComponent, {
       width: '500px',
-      data: { 'fieldId': id},
+      data: { 'fieldName': fieldName},
     });
   }
 
   openCreateField() {
     let dialogRef = this.dialog.open(EditFieldDialogComponent, {
       width: '500px',
-      data: {'fieldId': null},
+      data: {'fieldName': null},
     });
   }
 
-  openConfirmDelete(id: number) {
+  openConfirmDelete(fieldName: string) {
     let dialogRef = this.dialog.open(DeleteFieldDialogComponent, {
       width: '500px',
       disableClose: false
     });
     dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
-    dialogRef.componentInstance.fieldId = id
+    dialogRef.componentInstance.fieldName = fieldName
 
   }
 

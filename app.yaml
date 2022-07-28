@@ -2,7 +2,7 @@
 runtime: python39
 env: standard
 
-service: canaweb-ui
+service: default
 
 handlers:
   - url: /

@@ -1,33 +1,25 @@
 import { Injectable } from '@angular/core';
-import {Field} from "../field/field.model";
-import {BehaviorSubject, Observable} from "rxjs";
 import {Payable} from "./payable.model";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {LoggingService} from "../logging/logging.service";
 import {environment} from "../../environments/environment";
+import {map} from "rxjs/operators";
+import {BaseService} from "../global/base-service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class PayableService {
-  private payables!: Payable[];
-  payables$ = new BehaviorSubject<Payable[]>([]);
-  fetchedPayableTS!: Date;
-  constructor(private http: HttpClient, private logger: LoggingService) {
-    this.getAllPayables()
+export class PayableService extends BaseService<Payable> {
+
+  readonly concepts = ["AGROQUIMICOS", "COMIDA", "COSECHA", "FERTILIANTES", "GASOLINA", "MANO DE OBRA"]
+
+  constructor(http: HttpClient,
+    logger: LoggingService) {
+    super(http, logger, `${environment.apiBaseUri}/payables`)
   }
 
-  getAllPayables(): Observable<Payable[]> {
-    const url = `${environment.apiBaseUri}/payables`
-    const ts = new Date()
-    this.logger.info("Call GET: " + url + " @ " + ts)
-    this.fetchedPayableTS = ts
-
-    this.http.get<Payable[]>(url).subscribe( list => {
-      this.payables = list;
-      this.payables$.next(this.payables);
-    });
-
-    return this.payables$.asObservable()
+  refreshPayables(reset: boolean = false) {
+    return this.refreshData(reset)
   }
+
 }

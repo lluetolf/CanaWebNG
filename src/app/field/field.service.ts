@@ -5,44 +5,23 @@ import {Field} from "./field.model";
 import {BehaviorSubject, EMPTY, Observable, of} from "rxjs";
 import {filter, first, shareReplay, map, tap, retry, catchError} from "rxjs/operators";
 import {LoggingService} from "../logging/logging.service";
+import {BaseService} from "../global/base-service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class FieldService {
+export class FieldService extends BaseService<Field>{
 
-  private _fields$ = new BehaviorSubject<Field[]>([]);
-  readonly concepts = ["AGROQUIMICOS", "COMIDA", "COSECHA", "FERTILIANTES", "GASOLINA", "MANO DE OBRA"]
-
-  public get fields(): Observable<Field[]> {
-    return this._fields$.asObservable()
+  constructor(http: HttpClient,
+              logger: LoggingService) {
+    super(http, logger, `${environment.apiBaseUri}/field`)
   }
 
-  private set fields(fields$) {
-    fields$.subscribe(fields => this._fields$.next(fields))
-  }
-
-
-  constructor(private http: HttpClient,
-              private logger: LoggingService) {
-  }
-
-  refreshFields(reset: boolean = false) {
-    const url = `${environment.apiBaseUri}/fields`
-    this.logger.info("Fetching date from: " + url)
-    let fields$ = this.http.get<Field[]>(url, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
-      map(
-          (fields: Field[]) => fields.map(field => { field.acquisitionDate = this.createDateAsUTC(field.acquisitionDate); return field}),
-        )
-      );
-    this.fields = fields$
-  }
-
-  getField(id: number): Observable<Field | null> {
-    return this.fields!.pipe(
+  getField(name: string): Observable<Field | null> {
+    return this.data$!.pipe(
       map(
       fields => {
-        let selected = fields.filter(f => f.id == id);
+        let selected = fields.filter(f => f.name === name);
         if(selected.length > 0) {
           var s: Field = selected[0]
           s.acquisitionDate = this.createDateAsUTC(s.acquisitionDate)
@@ -53,44 +32,32 @@ export class FieldService {
     )
   }
 
-  update(id: number, field: Field) {
-    const url = `${environment.apiBaseUri}/fields/${id}`
-    field.id = id;
+  update(name: string, field: Field) {
+    const url = `${this.url}?fieldName=${name}`
     field.acquisitionDate = this.createDateAsUTC(field.acquisitionDate)
 
-    this.logger.info("Updating Field with id: " + id)
+    this.logger.info("Updating Field with name: " + name)
     return this.http.put(url, field).pipe(
-      map(x => {
-        return x;
-      })
+      map(x => { return x }),
+      catchError( this.handleError)
     )
   }
 
   create(params: any): Observable<Field> {
-    const url = `${environment.apiBaseUri}/fields`
-    return this.http.post<Field>(url, params);
+    return this.http.post<Field>(this.url, params)
+      .pipe(
+        catchError(this.handleError)
+      )
   }
 
-  delete(id: number): Observable<boolean> {
-    const url = `${environment.apiBaseUri}/fields/${id}`
-    this.logger.info("Delete Field: " + id)
+  delete(fieldName: string): Observable<boolean> {
+    const url = `${this.url}/${fieldName}`
+    this.logger.info("Delete Field: " + fieldName)
     return this.http.delete(url).pipe(
       map(x => {
         return true;}),
-      catchError( err => {return Observable.throw(false)})
+      catchError( this.handleError)
     )
 
   }
-
-  private  createDateAsUTC(date: Date): Date {
-    if(typeof date === 'string')
-      date = new Date(date)
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
-  }
-
-  private convertDateToUTC(date: Date): Date {
-    return new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds());
-  }
-
-
 }

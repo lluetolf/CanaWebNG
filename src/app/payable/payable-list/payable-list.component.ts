@@ -12,7 +12,7 @@ import {PayableService} from "../payable.service";
 export class PayableListComponent implements OnInit {
 
   allPayables$!: Observable<Payable[]>
-  columnsToDisplay = ['id', 'name', 'ownerId', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
+  columnsToDisplay = ['id', 'name', 'owner', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
   footerColumnsToDisplay = ['creater'];
   dataSource = new MatTableDataSource<Payable>();
 
@@ -24,7 +24,7 @@ export class PayableListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.allPayables$ = this.payableService.getAllPayables()
+    this.allPayables$ = this.payableService.data$
     this.allPayables$.subscribe(payables => {
       this.dataSource.data = payables;
     });

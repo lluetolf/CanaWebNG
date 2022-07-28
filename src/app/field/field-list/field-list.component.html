@@ -15,9 +15,9 @@
       <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
       <mat-cell *matCellDef="let field"> {{field.name}} </mat-cell>
     </ng-container>
-    <ng-container matColumnDef="ownerId">
-      <mat-header-cell *matHeaderCellDef> OwnerId</mat-header-cell>
-      <mat-cell *matCellDef="let field"> {{field.ownerId}} </mat-cell>
+    <ng-container matColumnDef="owner">
+      <mat-header-cell *matHeaderCellDef> Owner</mat-header-cell>
+      <mat-cell *matCellDef="let field"> {{field.owner}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="size">
       <mat-header-cell *matHeaderCellDef> Size</mat-header-cell>
@@ -38,10 +38,10 @@
     <ng-container matColumnDef="operations">
       <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
       <mat-cell *matCellDef="let field">
-        <button mat-icon-button color="primary" (click)="openEditField(field.id)">
+        <button mat-icon-button color="primary" (click)="openEditField(field.name)">
           <mat-icon> edit </mat-icon>
         </button>
-        <button mat-icon-button color="accent" (click)="openConfirmDelete(field.id)">
+        <button mat-icon-button color="accent" (click)="openConfirmDelete(field.name)">
           <mat-icon> delete </mat-icon>
         </button>
       </mat-cell>

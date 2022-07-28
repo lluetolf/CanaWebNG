@@ -1,9 +1,9 @@
 import {BaseEntity} from "../global/base-entity";
 
-export interface Field extends BaseEntity{
-  id: number;
+export interface Field extends BaseEntity {
+  id: string;
   name: string;
-  ownerId: number;
+  owner: string;
   size: number;
   cultivatedArea: number;
   acquisitionDate: Date;

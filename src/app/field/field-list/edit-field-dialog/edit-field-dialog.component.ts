@@ -15,12 +15,12 @@ export class EditFieldDialogComponent implements OnInit {
   fieldForm!: FormGroup;
   loading = false;
   title = ""
-  private isCreateMode!: boolean;
-  private fieldId!: number;
+  public isCreateMode!: boolean;
+  private fieldName!: string;
   errorMsg: string | undefined = undefined;
 
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {fieldId: number},
+  constructor(@Inject(MAT_DIALOG_DATA) public data: {fieldName: string},
               private fb: FormBuilder,
               private fieldService: FieldService,
               private logger: LoggingService,
@@ -28,19 +28,19 @@ export class EditFieldDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fieldId = this.data.fieldId
-    this.isCreateMode = this.fieldId == null;
-    this.logger.debug(`ID: ${this.fieldId} and CreateMode: ${this.isCreateMode}`)
+    this.fieldName = this.data.fieldName
+    this.isCreateMode = this.fieldName == null;
+    this.logger.debug(`ID: ${this.fieldName} and CreateMode: ${this.isCreateMode}`)
 
     //TODO valided dates and improve HTML form.
     this.fieldForm = this.fb.group({
       name: ['', Validators.required],
-      ingenioId: ['', Validators.required],
-      ownerId: ['', Validators.required],
+      owner: ['', Validators.required],
       size: ['', Validators.required],
       cultivatedArea: ['', Validators.required],
       acquisitionDate: ['', Validators.required],
-      lastUpdated: ['', Validators.required],
+      ingenioId: ['', Validators.required],
+      lastUpdated: ['', Validators.required, ],
     });
 
     if(this.isCreateMode) {
@@ -48,10 +48,12 @@ export class EditFieldDialogComponent implements OnInit {
       this.fieldForm.controls['lastUpdated'].setValue(new Date())
     } else {
       this.title = "Edit Field"
-      this.fieldService.getField(this.fieldId)
+      this.fieldForm.controls['name'].disable()
+      this.fieldService.getField(this.fieldName)
         .pipe(first())
         .subscribe(x => this.fieldForm.patchValue(x!));
     }
+    this.fieldForm.controls['lastUpdated'].disable()
   }
 
   save() {
@@ -68,11 +70,11 @@ export class EditFieldDialogComponent implements OnInit {
   }
 
   private update() {
-    this.fieldService.update(this.fieldId, this.fieldForm.value)
+    this.fieldService.update(this.fieldName, this.fieldForm.value)
       .pipe(first())
       .subscribe({
         next: () => {
-          this.fieldService.refreshFields(true)
+          this.fieldService.refreshData(true)
           this.logger.info('Update successful')
           this.dialogRef.close()
         },
@@ -94,7 +96,7 @@ export class EditFieldDialogComponent implements OnInit {
       .subscribe({
         next: f => {
           this.logger.info(`Created successful with id:${f.id}`)
-          this.fieldService.refreshFields(true)
+          this.fieldService.refreshData(true)
           this.dialogRef.close()
         },
         error: error => {
