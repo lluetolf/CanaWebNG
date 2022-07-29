@@ -15,11 +15,32 @@ export class PayableService extends BaseService<Payable> {
 
   constructor(http: HttpClient,
     logger: LoggingService) {
-    super(http, logger, `${environment.apiBaseUri}/payables`)
+    super(http, logger, `${environment.apiBaseUri}/payable`)
   }
 
   refreshPayables(reset: boolean = false) {
     return this.refreshData(reset)
+  }
+
+  getDataForMonth(year: number, month: number) {
+    let urlGetAll = this.url + `/month?year=${year}&month=${month+1}`;
+    this.logger.info("Fetching date from: " + urlGetAll);
+
+    let payables$ = this.http.get<Payable[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(false) }) }).pipe(
+      map(
+        (data: Payable[]) => {
+          return data.map(d => {
+            let dateFields = Object.keys(d).filter(x => x.includes("Date"))
+            dateFields.forEach( (x) => {
+              console.log("Covnert: " + x);
+              (d as any)[x] = this.createDateAsUTC((d as any)[x]);
+            })
+            return d
+          });
+        },
+      )
+    );
+    this.data$ = payables$
   }
 
 }

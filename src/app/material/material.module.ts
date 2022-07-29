@@ -44,7 +44,7 @@ import { MatTableModule } from '@angular/material/table';
 // Material Date
 import { MatNativeDateModule } from '@angular/material/core';
 import {BrowserModule} from "@angular/platform-browser";
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 @NgModule({
   declarations: [],
@@ -88,6 +88,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     MatNativeDateModule,
     CommonModule,
     BrowserModule,
+    FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
   ],
@@ -131,7 +132,9 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     CommonModule,
     BrowserModule,
     ReactiveFormsModule,
+    FormsModule,
     BrowserAnimationsModule,
+    FormsModule
   ]
 })
 export class MaterialModule { }

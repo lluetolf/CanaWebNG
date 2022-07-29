@@ -3,7 +3,7 @@ export interface Payable {
   pricePerUnit: number;
   quantity: number;
   documentId: string;
-  fieldId: number;
+  fieldNames: string[];
   category: string;
   subCategory: string;
   comment: string;
