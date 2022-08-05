@@ -38,10 +38,8 @@ ng generate interface receivable/receivable.model
 ng generate module payable
 ng generate component payable --skip-tests
 ng generate component payable/payable-list --skip-tests
-ng generate component payable/payable-date-selector --skip-tests
-ng generate component payable/edit-payable-dialog --skip-tests
-ng generate component payable/create-payable-dialog --skip-tests
-ng generate component payable/delete-payable-dialog --skip-tests
+ng generate component payable/payable-list/edit-payable-dialog --skip-tests
+ng generate component payable/payable-list/delete-payable-dialog --skip-tests
 ng generate service payable/payable --skip-tests
 ng generate interface payable/payable.model
 
