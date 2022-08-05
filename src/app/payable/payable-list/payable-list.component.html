@@ -1,4 +1,4 @@
-<div class="content-container">
+<div id="content-container">
 
   <mat-form-field class="data-table-search-input">
     <input matInput #inputBox
@@ -6,25 +6,29 @@
     />
   </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Year</mat-label>
-    <mat-select [(ngModel)]="selectedYear">
-      <mat-option *ngFor="let year of years" [value]="year">
-        {{ year.toString() }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <div id="month-selecter">
+    <mat-form-field appearance="fill">
+      <mat-label>Year</mat-label>
+      <mat-select [(ngModel)]="selectedYear">
+        <mat-option *ngFor="let year of years" [value]="year">
+          {{ year.toString() }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Month</mat-label>
-    <mat-select [(ngModel)]="selectedMonth" name="month">
-      <mat-option *ngFor="let month of months" [value]="month.value">
-        {{month.viewValue}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Month</mat-label>
+      <mat-select [(ngModel)]="selectedMonth" name="month">
+        <mat-option *ngFor="let month of months" [value]="month.value">
+          {{month.viewValue}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-  {{ selectedMonth }} of {{selectedYear}}
+    <button mat-button mat-raised-button (click)="updatePayableList()">
+      <mat-icon class="material-icons">play_circle_filled</mat-icon> Show
+    </button>
+  </div>
 
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
     <ng-container matColumnDef="category">
@@ -59,11 +63,11 @@
 
     <ng-container matColumnDef="operations">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
-      <mat-cell *matCellDef="let field">
-        <button mat-icon-button color="primary" (click)="openEditPayable(field.name)">
+      <mat-cell *matCellDef="let p">
+        <button mat-icon-button color="primary" (click)="openEditPayable(p.name)">
           <mat-icon> edit</mat-icon>
         </button>
-        <button mat-icon-button color="accent" (click)="openConfirmDelete(field.name)">
+        <button mat-icon-button color="accent" (click)="openConfirmDelete(p.name)">
           <mat-icon> delete</mat-icon>
         </button>
       </mat-cell>

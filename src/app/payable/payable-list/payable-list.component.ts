@@ -29,7 +29,7 @@ export class PayableListComponent implements OnInit {
   selectedYear: number = (new Date()).getFullYear();
 
   allPayables$!: Observable<Payable[]>
-  columnsToDisplay = ['category', 'subCategory', 'fieldNames', 'documentId', 'quantity', 'pricePerUnit', 'transactionDate'];
+  columnsToDisplay = ['category', 'subCategory', 'fieldNames', 'documentId', 'quantity', 'pricePerUnit', 'transactionDate', 'operations'];
   footerColumnsToDisplay = ['creater'];
   dataSource = new MatTableDataSource<Payable>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
@@ -92,5 +92,10 @@ export class PayableListComponent implements OnInit {
 
   openCreatePayable() {
 
+  }
+
+  updatePayableList() {
+    this.logger.info("Value")
+    this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth)
   }
 }

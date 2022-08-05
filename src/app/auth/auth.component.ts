@@ -25,7 +25,7 @@ export class AuthComponent implements OnInit {
     private logger: LoggingService,
     private ngZone: NgZone
   ) {
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/game';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/init';
 
     this.form = this.fb.group({
       username: ['', Validators.email],
