@@ -4,37 +4,37 @@
   </mat-card-content>
   <mat-card-content>
     <form [formGroup]="fieldForm" (ngSubmit)="save()">
-      <div class="example-container">
+      <div class="row-container">
         <mat-form-field appearance="fill">
           <mat-label>Name</mat-label>
           <input matInput formControlName="name">
         </mat-form-field>
       </div>
-      <div class="example-container">
+      <div class="row-container">
         <mat-form-field appearance="fill">
           <mat-label>IngenioId</mat-label>
           <input matInput formControlName="ingenioId">
         </mat-form-field>
       </div>
-      <div class="example-container">
+      <div class="row-container">
         <mat-form-field appearance="fill">
           <mat-label> Owner </mat-label>
           <input matInput formControlName="owner">
         </mat-form-field>
       </div>
-      <div class="example-container">
+      <div class="row-container">
         <mat-form-field appearance="fill">
           <mat-label>Size</mat-label>
           <input matInput formControlName="size" type="number">
         </mat-form-field>
       </div>
-      <div class="example-container">
+      <div class="row-container">
         <mat-form-field appearance="fill">
           <mat-label>CultivatedArea</mat-label>
           <input matInput formControlName="cultivatedArea" type="number">
         </mat-form-field>
       </div>
-      <div class="example-container">
+      <div class="row-container">
         <mat-form-field appearance="fill">
           <mat-label>AcquisitionDate</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="acquisitionDate">
@@ -42,13 +42,13 @@
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
       </div>
-      <div class="example-container">
+      <div class="row-container">
         <mat-form-field appearance="fill">
           <mat-label>LastUpdated</mat-label>
           <input matInput formControlName="lastUpdated" >
         </mat-form-field>
       </div>
-      <div class="example-container">
+      <div class="row-container">
         <button mat-button color="primary" [disabled]="loading">
           <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
           Save

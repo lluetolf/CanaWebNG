@@ -3,8 +3,9 @@ import {Payable} from "./payable.model";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {LoggingService} from "../logging/logging.service";
 import {environment} from "../../environments/environment";
-import {map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
 import {BaseService} from "../global/base-service";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -16,10 +17,6 @@ export class PayableService extends BaseService<Payable> {
   constructor(http: HttpClient,
     logger: LoggingService) {
     super(http, logger, `${environment.apiBaseUri}/payable`)
-  }
-
-  refreshPayables(reset: boolean = false) {
-    return this.refreshData(reset)
   }
 
   getDataForMonth(year: number, month: number) {
@@ -43,4 +40,27 @@ export class PayableService extends BaseService<Payable> {
     this.data$ = payables$
   }
 
+  getPayable(payableId: string): Observable<Payable | null> {
+      return this.data$!.pipe(
+        map(
+          payables => {
+            let selected = payables.filter(f => f.payableId === payableId);
+            if(selected.length > 0) {
+              var s: Payable = selected[0]
+              s.transactionDate = this.createDateAsUTC(s.transactionDate)
+              return s
+            }
+            return null;
+          })
+      )
+    }
+
+  create(params: any): Observable<Payable> {
+    let r = this.http.post<Payable>(this.url, params)
+      .pipe(
+        catchError(this.handleError),
+      )
+
+    return r
+  }
 }

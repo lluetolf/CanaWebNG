@@ -1,4 +1,5 @@
 export interface Payable {
+  payableId: string;
   transactionDate: Date;
   pricePerUnit: number;
   quantity: number;

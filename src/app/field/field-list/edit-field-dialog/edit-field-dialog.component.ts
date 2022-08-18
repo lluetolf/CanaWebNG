@@ -101,6 +101,7 @@ export class EditFieldDialogComponent implements OnInit {
         },
         error: error => {
           this.logger.error(error)
+          this.errorMsg = (error.message) ? error.message : (error.status) ? `${error.status} - ${error.statusText}` : 'Server error';
           this.loading = false;
         }
       });

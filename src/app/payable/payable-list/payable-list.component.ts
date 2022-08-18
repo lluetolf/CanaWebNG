@@ -3,10 +3,11 @@ import {Observable} from "rxjs";
 import {Payable} from "../payable.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {PayableService} from "../payable.service";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {LoggingService} from "../../logging/logging.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {EditPayableDialogComponent} from "./edit-payable-dialog/edit-payable-dialog.component";
 
 
 
@@ -28,7 +29,6 @@ export class PayableListComponent implements OnInit {
   selectedMonth: number = (new Date()).getMonth();
   selectedYear: number = (new Date()).getFullYear();
 
-  allPayables$!: Observable<Payable[]>
   columnsToDisplay = ['category', 'subCategory', 'fieldNames', 'documentId', 'quantity', 'pricePerUnit', 'transactionDate', 'operations'];
   footerColumnsToDisplay = ['creater'];
   dataSource = new MatTableDataSource<Payable>();
@@ -36,24 +36,21 @@ export class PayableListComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
   constructor(private payableService: PayableService,
-              public dialog: MatDialog,
+              public modifyDialog: MatDialog,
               private logger: LoggingService) {
   }
 
   ngOnInit(): void {
     this.logger.info("Init PayableListComponent")
-    this.allPayables$ = this.payableService.data$
-    this.allPayables$.subscribe(payables => {
-      this.dataSource.data = payables;
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+      this.payableService.data$.subscribe(payables => {
+        this.dataSource.data = payables;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
     this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth)
   }
 
   step = 0;
-
-
   setStep(index: number) {
     this.step = index;
   }
@@ -91,7 +88,16 @@ export class PayableListComponent implements OnInit {
   }
 
   openCreatePayable() {
+    const dialogConfig = new MatDialogConfig();
 
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "80%";
+    dialogConfig.data = {
+      payableId: null
+    };
+
+    this.modifyDialog.open(EditPayableDialogComponent, dialogConfig)
   }
 
   updatePayableList() {

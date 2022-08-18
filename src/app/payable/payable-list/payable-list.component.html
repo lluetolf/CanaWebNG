@@ -53,7 +53,7 @@
     </ng-container>
     <ng-container matColumnDef="pricePerUnit">
       <mat-header-cell *matHeaderCellDef>PPU</mat-header-cell>
-      <mat-cell *matCellDef="let p"> {{p.pricePerUnit}} </mat-cell>
+      <mat-cell *matCellDef="let p"> {{p.pricePerUnit | number: '1.2-2'}} </mat-cell>
     </ng-container>
     <ng-container matColumnDef="transactionDate">
       <mat-header-cell *matHeaderCellDef>Date</mat-header-cell>
