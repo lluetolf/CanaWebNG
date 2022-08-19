@@ -64,10 +64,10 @@
     <ng-container matColumnDef="operations">
       <mat-header-cell *matHeaderCellDef></mat-header-cell>
       <mat-cell *matCellDef="let p">
-        <button mat-icon-button color="primary" (click)="openEditPayable(p.name)">
+        <button mat-icon-button color="primary" (click)="openEditPayable(p.payableId)">
           <mat-icon> edit</mat-icon>
         </button>
-        <button mat-icon-button color="accent" (click)="openConfirmDelete(p.name)">
+        <button mat-icon-button color="accent" (click)="openConfirmDelete(p.payableId)">
           <mat-icon> delete</mat-icon>
         </button>
       </mat-cell>

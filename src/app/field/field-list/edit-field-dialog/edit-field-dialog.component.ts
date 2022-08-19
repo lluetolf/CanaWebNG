@@ -4,7 +4,6 @@ import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/for
 import {FieldService} from "../../field.service";
 import {first} from "rxjs/operators";
 import {LoggingService} from "../../../logging/logging.service";
-import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-edit-field-dialog',
@@ -18,13 +17,13 @@ export class EditFieldDialogComponent implements OnInit {
   public isCreateMode!: boolean;
   private fieldName!: string;
   errorMsg: string | undefined = undefined;
+  public dialogRef!: MatDialogRef<EditFieldDialogComponent>;
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: {fieldName: string},
               private fb: FormBuilder,
               private fieldService: FieldService,
-              private logger: LoggingService,
-              public dialogRef: MatDialogRef<EditFieldDialogComponent>) {
+              private logger: LoggingService) {
   }
 
   ngOnInit(): void {
@@ -74,7 +73,6 @@ export class EditFieldDialogComponent implements OnInit {
       .pipe(first())
       .subscribe({
         next: () => {
-          this.fieldService.refreshData(true)
           this.logger.info('Update successful')
           this.dialogRef.close()
         },
@@ -96,7 +94,6 @@ export class EditFieldDialogComponent implements OnInit {
       .subscribe({
         next: f => {
           this.logger.info(`Created successful with id:${f.id}`)
-          this.fieldService.refreshData(true)
           this.dialogRef.close()
         },
         error: error => {

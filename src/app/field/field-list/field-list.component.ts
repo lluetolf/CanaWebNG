@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Observable} from "rxjs";
 import {Field} from "../field.model";
 import {FieldService} from "../field.service";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
@@ -25,7 +25,7 @@ export class FieldListComponent implements OnInit {
 
   constructor(
     private fieldService: FieldService,
-    public dialog: MatDialog,
+    public modifyDialog: MatDialog,
     private logger: LoggingService) { }
 
   ngOnInit(): void {
@@ -44,28 +44,35 @@ export class FieldListComponent implements OnInit {
   }
 
   openEditField(fieldName: string) {
-    let dialogRef = this.dialog.open(EditFieldDialogComponent, {
-      width: '500px',
-      data: { 'fieldName': fieldName},
-    });
+    this.openDialog(fieldName)
   }
 
   openCreateField() {
-    let dialogRef = this.dialog.open(EditFieldDialogComponent, {
-      width: '500px',
-      data: {'fieldName': null},
-    });
+    this.openDialog(null)
   }
 
   openConfirmDelete(fieldName: string) {
-    let dialogRef = this.dialog.open(DeleteFieldDialogComponent, {
+    let dialogRef = this.modifyDialog.open(DeleteFieldDialogComponent, {
       width: '500px',
       disableClose: false
     });
     dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
     dialogRef.componentInstance.fieldName = fieldName
-
   }
 
+
+  private openDialog(fieldName: String | null) {
+    const dialogConfig = new MatDialogConfig();
+
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = "80%";
+    dialogConfig.data = {
+      payableId: fieldName
+    };
+
+    let dialogRef = this.modifyDialog.open(EditFieldDialogComponent, dialogConfig)
+    dialogRef .afterClosed().subscribe(() =>  this.logger.info("closed") )
+  }
 
 }

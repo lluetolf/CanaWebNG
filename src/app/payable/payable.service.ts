@@ -12,18 +12,18 @@ import {Observable} from "rxjs";
 })
 export class PayableService extends BaseService<Payable> {
 
-  readonly concepts = ["AGROQUIMICOS", "COMIDA", "COSECHA", "FERTILIANTES", "GASOLINA", "MANO DE OBRA"]
+  readonly concepts = ["AGROQUIMICOS", "COMIDA", "COSECHA", "FERTILIZANTES", "GASOLINA", "MANO DE OBRA"]
 
   constructor(http: HttpClient,
     logger: LoggingService) {
     super(http, logger, `${environment.apiBaseUri}/payable`)
   }
 
-  getDataForMonth(year: number, month: number) {
+  getDataForMonth(year: number, month: number, reset = false) {
     let urlGetAll = this.url + `/month?year=${year}&month=${month+1}`;
     this.logger.info("Fetching date from: " + urlGetAll);
 
-    let payables$ = this.http.get<Payable[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(false) }) }).pipe(
+    let payables$ = this.http.get<Payable[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
       map(
         (data: Payable[]) => {
           return data.map(d => {
@@ -65,7 +65,7 @@ export class PayableService extends BaseService<Payable> {
   }
 
   update(payableId: string, payable: Payable): Observable<Payable> {
-    const url = `${this.url}this.url?payableId=${payableId}`
+    const url = `${this.url}?payableId=${payableId}`
     let r = this.http.put<Payable>(url, payable)
       .pipe(
         catchError(this.handleError),

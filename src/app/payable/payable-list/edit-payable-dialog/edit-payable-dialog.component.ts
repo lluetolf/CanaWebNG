@@ -84,12 +84,11 @@ export class EditPayableDialogComponent implements OnInit {
   }
 
   private create() {
-    this.payableService.create(this.payableForm.value)
+    this.payableService.create(this.payableForm.getRawValue())
       .pipe(first())
       .subscribe({
         next: f => {
-          this.logger.info(`Created successful with id:${f.payableId}`)
-          this.payableService.refreshData(true)
+          this.logger.info(`Created successful with id: ${f.payableId}`)
           this.dialogRef.close()
         },
         error: error => {
@@ -105,12 +104,11 @@ export class EditPayableDialogComponent implements OnInit {
   }
 
   private update() {
-    this.payableService.update(this.payableId, this.payableForm.value)
+    this.payableService.update(this.payableId, this.payableForm.getRawValue())
       .pipe(first())
       .subscribe({
-        next: () => {
-          this.payableService.refreshData(true)
-          this.logger.info('Update successful')
+        next: f => {
+          this.logger.info(`Update successful: ${f.payableId}`)
           this.dialogRef.close()
         },
         error: error => {

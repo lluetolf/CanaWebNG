@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import { Component } from '@angular/core';
+import {MatDialogRef} from "@angular/material/dialog";
 import {FieldService} from "../../field.service";
 import {LoggingService} from "../../../logging/logging.service";
 import {first} from "rxjs/operators";

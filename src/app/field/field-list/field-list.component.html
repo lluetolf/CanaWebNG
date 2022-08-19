@@ -1,67 +1,70 @@
-<div>
-  <mat-form-field class="data-table-search-input">
-    <input matInput #inputBox
-      (keyup)="applyFilter(inputBox.value)"
-      placeholder="Search here"
-    />
-  </mat-form-field>
+<div id="content-container">
 
-   <mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
-    <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef> Id</mat-header-cell>
-      <mat-cell *matCellDef="let field"> {{field.id}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
-      <mat-cell *matCellDef="let field"> {{field.name}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="owner">
-      <mat-header-cell *matHeaderCellDef> Owner</mat-header-cell>
-      <mat-cell *matCellDef="let field"> {{field.owner}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="size">
-      <mat-header-cell *matHeaderCellDef> Size</mat-header-cell>
-      <mat-cell *matCellDef="let field"> {{field.size}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="cultivatedArea">
-      <mat-header-cell *matHeaderCellDef> CultivatedArea</mat-header-cell>
-      <mat-cell *matCellDef="let field"> {{field.cultivatedArea}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="acquisitionDate">
-      <mat-header-cell *matHeaderCellDef> AcquisitionDate</mat-header-cell>
-      <mat-cell *matCellDef="let field"> {{field.acquisitionDate | date: 'dd.MM.yyyy'}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="ingenioId">
-      <mat-header-cell *matHeaderCellDef> IngenioId</mat-header-cell>
-      <mat-cell *matCellDef="let field"> {{field.ingenioId}} </mat-cell>
-    </ng-container>
-    <ng-container matColumnDef="operations">
-      <mat-header-cell *matHeaderCellDef>  </mat-header-cell>
-      <mat-cell *matCellDef="let field">
-        <button mat-icon-button color="primary" (click)="openEditField(field.name)">
-          <mat-icon> edit </mat-icon>
-        </button>
-        <button mat-icon-button color="accent" (click)="openConfirmDelete(field.name)">
-          <mat-icon> delete </mat-icon>
-        </button>
-      </mat-cell>
-    </ng-container>
+  <div>
+    <mat-form-field class="data-table-search-input">
+      <input matInput #inputBox
+             (keyup)="applyFilter(inputBox.value)"
+             placeholder="Search here"
+      />
+    </mat-form-field>
 
-    <ng-container matColumnDef="creater">
-      <mat-footer-cell *matFooterCellDef>
-        <button mat-raised-button color="primary" (click)="openCreateField()">Create</button>
-      </mat-footer-cell>
-    </ng-container>
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef> Id</mat-header-cell>
+        <mat-cell *matCellDef="let field"> {{field.id}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="name">
+        <mat-header-cell *matHeaderCellDef> Name</mat-header-cell>
+        <mat-cell *matCellDef="let field"> {{field.name}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="owner">
+        <mat-header-cell *matHeaderCellDef> Owner</mat-header-cell>
+        <mat-cell *matCellDef="let field"> {{field.owner}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="size">
+        <mat-header-cell *matHeaderCellDef> Size</mat-header-cell>
+        <mat-cell *matCellDef="let field"> {{field.size}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="cultivatedArea">
+        <mat-header-cell *matHeaderCellDef> CultivatedArea</mat-header-cell>
+        <mat-cell *matCellDef="let field"> {{field.cultivatedArea}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="acquisitionDate">
+        <mat-header-cell *matHeaderCellDef> AcquisitionDate</mat-header-cell>
+        <mat-cell *matCellDef="let field"> {{field.acquisitionDate | date: 'dd.MM.yyyy'}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="ingenioId">
+        <mat-header-cell *matHeaderCellDef> IngenioId</mat-header-cell>
+        <mat-cell *matCellDef="let field"> {{field.ingenioId}} </mat-cell>
+      </ng-container>
+      <ng-container matColumnDef="operations">
+        <mat-header-cell *matHeaderCellDef></mat-header-cell>
+        <mat-cell *matCellDef="let field">
+          <button mat-icon-button color="primary" (click)="openEditField(field.name)">
+            <mat-icon> edit</mat-icon>
+          </button>
+          <button mat-icon-button color="accent" (click)="openConfirmDelete(field.name)">
+            <mat-icon> delete</mat-icon>
+          </button>
+        </mat-cell>
+      </ng-container>
+
+      <ng-container matColumnDef="creater">
+        <mat-footer-cell *matFooterCellDef>
+          <button mat-raised-button color="primary" (click)="openCreateField()">Create</button>
+        </mat-footer-cell>
+      </ng-container>
 
 
-    <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
-    <mat-footer-row *matFooterRowDef="footerColumnsToDisplay"></mat-footer-row>
-    <mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></mat-row>
-  </mat-table>
+      <mat-header-row *matHeaderRowDef="columnsToDisplay"></mat-header-row>
+      <mat-footer-row *matFooterRowDef="footerColumnsToDisplay"></mat-footer-row>
+      <mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></mat-row>
+    </mat-table>
 
-  <mat-paginator [pageSizeOptions]="[8, 16, 32]"
-                 showFirstLastButtons
-                 aria-label="Select page of periodic elements">
-  </mat-paginator>
+    <mat-paginator [pageSizeOptions]="[8, 16, 32]"
+                   showFirstLastButtons
+                   aria-label="Select page of periodic elements">
+    </mat-paginator>
 
+  </div>
 </div>

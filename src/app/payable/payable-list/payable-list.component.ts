@@ -1,9 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Observable} from "rxjs";
 import {Payable} from "../payable.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {PayableService} from "../payable.service";
-import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
 import {LoggingService} from "../../logging/logging.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
@@ -35,33 +34,22 @@ export class PayableListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
+
   constructor(private payableService: PayableService,
               public modifyDialog: MatDialog,
               private logger: LoggingService) {
+    this.logger.info("Init PayableListComponent")
+    this.payableService.data$.subscribe((payables) => {
+      this.dataSource.data = payables;
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
 
   ngOnInit(): void {
-    this.logger.info("Init PayableListComponent")
-      this.payableService.data$.subscribe(payables => {
-        this.dataSource.data = payables;
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      });
     this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth)
   }
 
-  step = 0;
-  setStep(index: number) {
-    this.step = index;
-  }
-
-  nextStep() {
-    this.step++;
-  }
-
-  prevStep() {
-    this.step--;
-  }
 
   getMonthList (locale = "en"): MonthEntry[] {
     let list: MonthEntry[] = [];
@@ -79,29 +67,35 @@ export class PayableListComponent implements OnInit {
     return list
   }
 
-  openEditPayable(name: string) {
-
-  }
-
-  openConfirmDelete(name: string) {
-
+  openEditPayable(payableId: string) {
+    this.openDialog(payableId)
   }
 
   openCreatePayable() {
+    this.openDialog(null)
+  }
+
+  openConfirmDelete(payableId: string) {
+
+  }
+
+  //
+  //
+  private openDialog(payableId: String | null) {
     const dialogConfig = new MatDialogConfig();
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.width = "80%";
     dialogConfig.data = {
-      payableId: null
+      payableId: payableId
     };
 
-    this.modifyDialog.open(EditPayableDialogComponent, dialogConfig)
+    let dialogRef = this.modifyDialog.open(EditPayableDialogComponent, dialogConfig)
+    dialogRef .afterClosed().subscribe(() =>  this.updatePayableList() )
   }
 
-  updatePayableList() {
-    this.logger.info("Value")
-    this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth)
+  public updatePayableList() {
+    this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth, true)
   }
 }
