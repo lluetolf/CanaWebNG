@@ -63,4 +63,14 @@ export class PayableService extends BaseService<Payable> {
 
     return r
   }
+
+  update(payableId: string, payable: Payable): Observable<Payable> {
+    const url = `${this.url}this.url?payableId=${payableId}`
+    let r = this.http.put<Payable>(url, payable)
+      .pipe(
+        catchError(this.handleError),
+      )
+
+    return r
+  }
 }

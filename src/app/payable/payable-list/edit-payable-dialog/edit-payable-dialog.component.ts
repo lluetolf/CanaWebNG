@@ -105,7 +105,20 @@ export class EditPayableDialogComponent implements OnInit {
   }
 
   private update() {
-
+    this.payableService.update(this.payableId, this.payableForm.value)
+      .pipe(first())
+      .subscribe({
+        next: () => {
+          this.payableService.refreshData(true)
+          this.logger.info('Update successful')
+          this.dialogRef.close()
+        },
+        error: error => {
+          this.logger.error(error)
+          this.errorMsg = (error.message) ? error.message : (error.status) ? `${error.status} - ${error.statusText}` : 'Server error';
+          this.loading = false;
+        }
+      });
   }
 
   private getFormValidationErrors() {
