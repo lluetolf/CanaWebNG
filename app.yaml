@@ -2,7 +2,7 @@
 runtime: python39
 env: standard
 
-service: default
+service: canaweb-ui
 
 handlers:
   - url: /
@@ -10,6 +10,7 @@ handlers:
     upload: dist/CanaWebNG/index.html
   - url: /
     static_dir: dist/CanaWebNG
+
 
 
 # gcloud app deploy --project=dev-canaweb-firestore

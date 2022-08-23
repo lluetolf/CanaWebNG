@@ -1,9 +1,9 @@
-import {Injectable, OnInit} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
 import { environment } from '../../environments/environment';
 import {Field} from "./field.model";
-import {BehaviorSubject, EMPTY, Observable, of} from "rxjs";
-import {filter, first, shareReplay, map, tap, retry, catchError} from "rxjs/operators";
+import {Observable} from "rxjs";
+import { map, catchError} from "rxjs/operators";
 import {LoggingService} from "../logging/logging.service";
 import {BaseService} from "../global/base-service";
 

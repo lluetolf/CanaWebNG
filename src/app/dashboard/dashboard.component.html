@@ -1,1 +1,17 @@
-<p>dashboard works!</p>
+
+<mat-card class="env-info">
+  <mat-card-title-group>
+    <mat-card-title>Release Details</mat-card-title>
+  </mat-card-title-group>
+
+  <ul>
+    <li>Env</li>
+    <li>Time</li>
+    <li>Hash</li>
+    <li>Branch</li>
+    <li>{{env}}</li>
+    <li>{{buildTime.substr(0, 8)}}</li>
+    <li>{{commitSha.substr(0, 8)}}</li>
+    <li>{{branchName}}</li>
+  </ul>
+</mat-card>

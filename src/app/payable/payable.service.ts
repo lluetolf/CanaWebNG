@@ -73,4 +73,14 @@ export class PayableService extends BaseService<Payable> {
 
     return r
   }
+
+  delete(payableId: string) : Observable<boolean> {
+    const url = `${this.url}/${payableId}`
+    this.logger.info("Delete payable: " + payableId)
+    return this.http.delete(url).pipe(
+      map(x => {
+        return true;}),
+      catchError( this.handleError)
+    )
+  }
 }

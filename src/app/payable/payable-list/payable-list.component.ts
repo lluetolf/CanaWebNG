@@ -2,11 +2,12 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {Payable} from "../payable.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {PayableService} from "../payable.service";
-import {MatDialog, MatDialogConfig, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog, MatDialogConfig} from "@angular/material/dialog";
 import {LoggingService} from "../../logging/logging.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {EditPayableDialogComponent} from "./edit-payable-dialog/edit-payable-dialog.component";
+import {DeletePayableDialogComponent} from "./delete-payable-dialog/delete-payable-dialog.component";
 
 
 
@@ -76,11 +77,16 @@ export class PayableListComponent implements OnInit {
   }
 
   openConfirmDelete(payableId: string) {
-
+    let dialogRef = this.modifyDialog.open(DeletePayableDialogComponent, {
+      width: '500px',
+      disableClose: false
+    });
+    dialogRef.componentInstance.confirmMessage = "Are you sure you want to delete?"
+    dialogRef.componentInstance.payableId = payableId
+    dialogRef.afterClosed().subscribe(() =>  this.updatePayableList() )
   }
 
-  //
-  //
+
   private openDialog(payableId: String | null) {
     const dialogConfig = new MatDialogConfig();
 
@@ -92,7 +98,7 @@ export class PayableListComponent implements OnInit {
     };
 
     let dialogRef = this.modifyDialog.open(EditPayableDialogComponent, dialogConfig)
-    dialogRef .afterClosed().subscribe(() =>  this.updatePayableList() )
+    dialogRef.afterClosed().subscribe(() =>  this.updatePayableList() )
   }
 
   public updatePayableList() {
