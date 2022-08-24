@@ -12,7 +12,7 @@ steps:
         for f in ./src/environments/environment.*; do
           echo "Replace values in: ${f}"
           sed -i "s/_SB_ENV/${_SB_ENV}/g" $f
-          sed -i "s/_BUILD_TIME/`date +'%F %T'`/g" $f
+          sed -i "s/_BUILD_TIME/`date +'%F %T UTC'`/g" $f
           sed -i "s/_COMMIT_ID/${COMMIT_SHA}/g" $f
           sed -i "s/_BRANCH_NAME/${BRANCH_NAME}/g" $f
         done
