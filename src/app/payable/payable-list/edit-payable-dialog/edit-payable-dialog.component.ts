@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {LoggingService} from "../../../logging/logging.service";
 import {PayableService} from "../../payable.service";
@@ -14,7 +14,7 @@ import {FieldService} from "../../../field/field.service";
 export class EditPayableDialogComponent implements OnInit {
   CATEGORIES!: string[]
   FIELDS!: string[]
-  payableForm!: FormGroup;
+  payableForm!: UntypedFormGroup;
   loading = false;
   title = "";
   public isCreateMode!: boolean;
@@ -22,7 +22,7 @@ export class EditPayableDialogComponent implements OnInit {
   errorMsg: string | undefined = undefined;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: {payableId: string},
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private payableService: PayableService,
               private fieldService: FieldService,
               private logger: LoggingService,

@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {FormBuilder, FormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {FieldService} from "../../field.service";
 import {first} from "rxjs/operators";
 import {LoggingService} from "../../../logging/logging.service";
@@ -11,7 +11,7 @@ import {LoggingService} from "../../../logging/logging.service";
   styleUrls: ['./edit-field-dialog.component.scss']
 })
 export class EditFieldDialogComponent implements OnInit {
-  fieldForm!: FormGroup;
+  fieldForm!: UntypedFormGroup;
   loading = false;
   title = ""
   public isCreateMode!: boolean;
@@ -21,7 +21,7 @@ export class EditFieldDialogComponent implements OnInit {
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: {fieldName: string},
-              private fb: FormBuilder,
+              private fb: UntypedFormBuilder,
               private fieldService: FieldService,
               private logger: LoggingService) {
   }

@@ -1,5 +1,5 @@
 import {Component, NgZone, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {AuthService} from "./auth.service";
 import {LoggingService} from "../logging/logging.service";
@@ -10,7 +10,7 @@ import {LoggingService} from "../logging/logging.service";
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  form: FormGroup;
+  form: UntypedFormGroup;
   public loginInvalid = false;
   public loggingIn = false;
   public errorMessage = null;
@@ -18,7 +18,7 @@ export class AuthComponent implements OnInit {
   private returnUrl: string;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private authService: AuthService,
