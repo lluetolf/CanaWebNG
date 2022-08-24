@@ -104,4 +104,8 @@ export class PayableListComponent implements OnInit {
   public updatePayableList() {
     this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth, true)
   }
+
+  public showPayableList() {
+    this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth, false)
+  }
 }
