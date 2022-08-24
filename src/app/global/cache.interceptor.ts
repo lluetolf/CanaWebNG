@@ -6,7 +6,6 @@ import {
   HttpInterceptor, HttpResponse
 } from '@angular/common/http';
 import { Observable, of} from 'rxjs';
-import * as dayjs from "dayjs";
 import {LoggingService} from "../logging/logging.service";
 import {tap} from "rxjs/operators";
 
@@ -38,7 +37,7 @@ export class CacheInterceptor implements HttpInterceptor {
     // Verify cache
     const cachedResponse = this.cache.get(request.url)
     if(cachedResponse) {
-      if (dayjs(new Date()).isBefore(cachedResponse.expires)) {
+      if ((new Date()).getTime() < cachedResponse.expires.getTime()) {
         this.logger.info("Using cached response.")
         return of(cachedResponse.response.clone())
       } else {
@@ -49,9 +48,9 @@ export class CacheInterceptor implements HttpInterceptor {
 
     // Create a new entry
     this.logger.info("Making request to server to get data.")
-    const expires = dayjs(new Date())
-      .add(this.CACHE_DURATION_IN_MINUTES, 'minutes')
-      .toDate();
+    const tmp = new Date()
+    const expires = new Date(tmp.getTime() + this.CACHE_DURATION_IN_MINUTES * 60000)
+
     return next.handle(request).pipe(
       tap( stateEvent=> {
         if(stateEvent instanceof HttpResponse) {
