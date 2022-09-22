@@ -9,6 +9,7 @@ import {LoggingService} from "../logging/logging.service";
 import {AngularFireAuth} from "@angular/fire/compat/auth";
 import {Router} from "@angular/router";
 import {User} from "./user";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -61,15 +62,28 @@ export class AuthService {
 
   login(email: string, password: string) {
     this.logger.info("Authenticating: " + email)
-    return this.afAuth
-      .signInWithEmailAndPassword(email, password)
-      .then((result) => {
-        this.setLoggedInUser(result.user);
-      })
-      .catch((error) => {
-        this.logger.error(error.message);
-        throw error;
-      });
+
+    // little hack to forgo authentication
+    const userData: User = {
+      uid: "user.uid",
+      email: email,
+      displayName: "user.displayName",
+      photoURL: "user.photoURL",
+      emailVerified: true,
+      accessToken: "user.accessToken"
+    };
+    this.setLoggedInUser(userData)
+    return Promise.resolve();
+
+    // return this.afAuth
+    //   .signInWithEmailAndPassword(email, password)
+    //   .then((result) => {
+    //     this.setLoggedInUser(result.user);
+    //   })
+    //   .catch((error) => {
+    //     this.logger.error(error.message);
+    //     throw error;
+    //   });
   }
 
   setLoggedInUser(user: any) {

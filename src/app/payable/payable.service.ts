@@ -7,6 +7,12 @@ import {catchError, map, tap} from "rxjs/operators";
 import {BaseService} from "../global/base-service";
 import {Observable} from "rxjs";
 
+interface MonthTotal {
+  year: number;
+  month: number;
+  total: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,7 +27,7 @@ export class PayableService extends BaseService<Payable> {
 
   getDataForMonth(year: number, month: number, reset = false) {
     let urlGetAll = this.url + `/month?year=${year}&month=${month+1}`;
-    this.logger.info("Fetching date from: " + urlGetAll);
+    this.logger.info("Get data for: " + urlGetAll);
 
     let payables$ = this.http.get<Payable[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
       map(
@@ -41,19 +47,22 @@ export class PayableService extends BaseService<Payable> {
   }
 
   getPayable(payableId: string): Observable<Payable | null> {
-      return this.data$!.pipe(
-        map(
-          payables => {
-            let selected = payables.filter(f => f.payableId === payableId);
-            if(selected.length > 0) {
-              var s: Payable = selected[0]
-              s.transactionDate = this.createDateAsUTC(s.transactionDate)
-              return s
-            }
-            return null;
-          })
-      )
-    }
+    const url = `${this.url}/${payableId}`
+    this.logger.info("Get payable: " + payableId)
+
+    return this.data$!.pipe(
+      map(
+        payables => {
+          let selected = payables.filter(f => f.payableId === payableId);
+          if(selected.length > 0) {
+            var s: Payable = selected[0]
+            s.transactionDate = this.createDateAsUTC(s.transactionDate)
+            return s
+          }
+          return null;
+        })
+    )
+  }
 
   create(params: any): Observable<Payable> {
     let r = this.http.post<Payable>(this.url, params)
@@ -66,6 +75,8 @@ export class PayableService extends BaseService<Payable> {
 
   update(payableId: string, payable: Payable): Observable<Payable> {
     const url = `${this.url}?payableId=${payableId}`
+    this.logger.info("Update payable: " + payableId)
+
     let r = this.http.put<Payable>(url, payable)
       .pipe(
         catchError(this.handleError),
@@ -77,10 +88,18 @@ export class PayableService extends BaseService<Payable> {
   delete(payableId: string) : Observable<boolean> {
     const url = `${this.url}/${payableId}`
     this.logger.info("Delete payable: " + payableId)
+
     return this.http.delete(url).pipe(
       map(x => {
         return true;}),
       catchError( this.handleError)
     )
+  }
+
+  getTotalPerMonth(): Observable<MonthTotal> {
+    const url = `${this.url}/monthlytotals`
+    this.logger.info("getTotalPerMonth")
+
+    return this.http.get<MonthTotal>(url);
   }
 }

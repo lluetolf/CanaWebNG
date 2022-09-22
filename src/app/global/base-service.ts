@@ -32,6 +32,7 @@ export abstract class BaseService<T> {
   public refreshData(reset: boolean = false) {
     let urlGetAll = this.url + "/all"
     this.logger.info("Fetching date from: " + urlGetAll)
+
     let fields$ = this.http.get<T[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
       map(
         (data: T[]) => {
