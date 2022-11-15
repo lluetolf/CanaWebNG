@@ -51,7 +51,7 @@ export class FieldService extends BaseService<Field>{
   }
 
   delete(fieldName: string): Observable<boolean> {
-    const url = `${this.url}/${fieldName}`
+    const url = `${this.url}/name/${fieldName}`
     this.logger.info("Delete Field: " + fieldName)
     return this.http.delete(url).pipe(
       map(x => {

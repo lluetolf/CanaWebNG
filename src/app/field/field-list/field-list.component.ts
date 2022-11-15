@@ -68,11 +68,11 @@ export class FieldListComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.width = "80%";
     dialogConfig.data = {
-      payableId: fieldName
+      fieldName
     };
 
     let dialogRef = this.modifyDialog.open(EditFieldDialogComponent, dialogConfig)
-    dialogRef .afterClosed().subscribe(() =>  this.logger.info("closed") )
+    dialogRef .afterClosed().subscribe(() =>  this.fieldService.refreshData(true))
   }
 
 }

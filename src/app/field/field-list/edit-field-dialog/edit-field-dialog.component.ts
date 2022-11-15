@@ -14,22 +14,21 @@ export class EditFieldDialogComponent implements OnInit {
   fieldForm!: UntypedFormGroup;
   loading = false;
   title = ""
-  public isCreateMode!: boolean;
-  private fieldName!: string;
+  private get isCreateMode(): boolean {
+    return this.data.fieldName == null;
+  }
   errorMsg: string | undefined = undefined;
-  public dialogRef!: MatDialogRef<EditFieldDialogComponent>;
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: {fieldName: string},
               private fb: UntypedFormBuilder,
               private fieldService: FieldService,
-              private logger: LoggingService) {
+              private logger: LoggingService,
+              public dialogRef: MatDialogRef<EditFieldDialogComponent>) {
   }
 
   ngOnInit(): void {
-    this.fieldName = this.data.fieldName
-    this.isCreateMode = this.fieldName == null;
-    this.logger.debug(`ID: ${this.fieldName} and CreateMode: ${this.isCreateMode}`)
+    this.logger.debug(`ID: ${this.data.fieldName} and CreateMode: ${this.isCreateMode}`)
 
     //TODO valided dates and improve HTML form.
     this.fieldForm = this.fb.group({
@@ -48,7 +47,7 @@ export class EditFieldDialogComponent implements OnInit {
     } else {
       this.title = "Edit Field"
       this.fieldForm.controls['name'].disable()
-      this.fieldService.getField(this.fieldName)
+      this.fieldService.getField(this.data.fieldName)
         .pipe(first())
         .subscribe(x => this.fieldForm.patchValue(x!));
     }
@@ -69,7 +68,7 @@ export class EditFieldDialogComponent implements OnInit {
   }
 
   private update() {
-    this.fieldService.update(this.fieldName, this.fieldForm.value)
+    this.fieldService.update(this.data.fieldName, this.fieldForm.getRawValue())
       .pipe(first())
       .subscribe({
         next: () => {
@@ -89,7 +88,7 @@ export class EditFieldDialogComponent implements OnInit {
   }
 
   private create() {
-    this.fieldService.create(this.fieldForm.value)
+    this.fieldService.create(this.fieldForm.getRawValue())
       .pipe(first())
       .subscribe({
         next: f => {
@@ -106,8 +105,8 @@ export class EditFieldDialogComponent implements OnInit {
 
   private getFormValidationErrors() {
     Object.keys(this.fieldForm.controls).forEach(key => {
-      const controlErrors: ValidationErrors = this.fieldForm.get(key)!.errors!;
-      if (controlErrors != null) {
+      const controlErrors = this.fieldForm.get(key)?.errors;
+      if (controlErrors) {
         Object.keys(controlErrors).forEach(keyError => {
           this.logger.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
         });
