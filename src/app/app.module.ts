@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 
+import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
+import { connectAuthEmulator, getAuth, provideAuth } from "@angular/fire/auth";
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
@@ -8,14 +11,13 @@ import { NavigationComponent } from './layout/navigation/navigation.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AuthInterceptor} from "./auth/auth.interceptor";
-import {AngularFireAuthModule} from "@angular/fire/compat/auth";
-import {AngularFireModule} from "@angular/fire/compat";
 import {environment} from "../environments/environment";
 import {FieldModule} from "./field/field.module";
 import {PayableModule} from "./payable/payable.module";
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {AuthModule} from "./auth/auth.module";
 import {CacheInterceptor} from "./global/cache.interceptor";
+
 
 @NgModule({
   declarations: [
@@ -25,11 +27,21 @@ import {CacheInterceptor} from "./global/cache.interceptor";
     FooterComponent,
   ],
   imports: [
+    provideAuth(() => {
+      console.log("Hello provideAuth")
+      const auth = getAuth();
+      if (environment.useEmulators) {
+        connectAuthEmulator(auth, "http://localhost:9099")
+      }
+      return (auth);
+    }),
+    provideFirebaseApp(() => {
+      const firebaseApp = initializeApp(environment.firebase)
+      return (firebaseApp);
+    }),
     AppRoutingModule,
     MaterialModule,
     HttpClientModule,
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule,
     AuthModule,
     FieldModule,
     PayableModule,
@@ -46,7 +58,6 @@ import {CacheInterceptor} from "./global/cache.interceptor";
       useClass: AuthInterceptor,
       multi: true
     }
-
   ],
   bootstrap: [AppComponent]
 })

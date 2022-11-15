@@ -1,58 +1,25 @@
 import {Injectable, NgZone} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {
-  AngularFirestore,
-} from "@angular/fire/compat/firestore";
-
 
 import {LoggingService} from "../logging/logging.service";
-import {AngularFireAuth} from "@angular/fire/compat/auth";
+import {Auth, User, signInWithEmailAndPassword, signOut} from "@angular/fire/auth";
 import {Router} from "@angular/router";
-import {User} from "./user";
-import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  userData: any;
-  loggedInUser: User = {
-    uid: "",
-    email: "",
-    displayName: "",
-    photoURL: "",
-    emailVerified: false,
-    accessToken: ""
-  };
+  loggedInUser: User|undefined;
+  private _accessToken: string = "";
 
   constructor(
-    private http: HttpClient,
     private logger: LoggingService,
-    public afs: AngularFirestore, // Inject Firestore service
-    public afAuth: AngularFireAuth, // Inject Firebase auth service
+    public auth: Auth,
     public router: Router
-  ) {
-    this.afAuth.authState.subscribe((user) => {
-      if (user) {
-        this.userData = user;
-        this.setLoggedInUser(user)
-        localStorage.setItem('user', JSON.stringify(this.loggedInUser));
-      } else {
-        localStorage.removeItem("user")
-      }
-    });
-    var tmp = localStorage.getItem("user")
-    if(tmp && tmp != "null") {
-      this.setLoggedInUser(JSON.parse(tmp));
-    }
-  }
-
-
+  ) {  }
 
   get isLoggedIn(): boolean {
-    const user = JSON.parse(localStorage.getItem('user')!);
-    return user !== null || this.loggedInUser.accessToken != "";
+    return this.auth.currentUser != null;
   }
 
   get isLoggedOut(): boolean {
@@ -62,64 +29,27 @@ export class AuthService {
 
   login(email: string, password: string) {
     this.logger.info("Authenticating: " + email)
-
-    // little hack to forgo authentication
-    const userData: User = {
-      uid: "user.uid",
-      email: email,
-      displayName: "user.displayName",
-      photoURL: "user.photoURL",
-      emailVerified: true,
-      accessToken: "user.accessToken"
-    };
-    this.setLoggedInUser(userData)
-    return Promise.resolve();
-
-    // return this.afAuth
-    //   .signInWithEmailAndPassword(email, password)
-    //   .then((result) => {
-    //     this.setLoggedInUser(result.user);
-    //   })
-    //   .catch((error) => {
-    //     this.logger.error(error.message);
-    //     throw error;
-    //   });
+    return signInWithEmailAndPassword(this.auth, email, password)
+      .then((result) => {
+        this.loggedInUser = result.user
+        this.loggedInUser.getIdToken().then(x => this._accessToken = x)
+      })
+      .catch((error) => {
+        this.logger.error(error.message);
+        throw error;
+      });
   }
 
-  setLoggedInUser(user: any) {
-    const userData: User = {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified,
-      accessToken: user._delegate?.accessToken || user.accessToken
-    };
-    this.loggedInUser = userData;
-  }
 
 
   logout() {
-    return this.afAuth.signOut().then(() => {
-      const tmp: User = {
-        uid: "",
-        email: "",
-        displayName: "",
-        photoURL: "",
-        emailVerified: false,
-        accessToken: ""
-      };
-      this.loggedInUser = tmp;
-      localStorage.removeItem('user');
-      this.router.navigate(['auth']);
-    });
-  }
-
-  get expirationTime() {
-    return undefined;
+    signOut(this.auth).then(
+      () => { console.log("Logged out.")},
+      () => { console.log("Error logging out.")}
+    )
   }
 
   get accessToken(): string {
-    return this.loggedInUser.accessToken;
+    return this._accessToken
   }
 }

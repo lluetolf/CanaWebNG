@@ -2,6 +2,7 @@
 
 export const environment = {
   production: false,
+  useEmulators: true,
   apiBaseUri: "http://localhost:9547/api",
   firebase: {
     apiKey: "AIzaSyDxNB0QvG8UKQDnc1s7ik7oqsg-0CdW758",

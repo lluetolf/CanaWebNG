@@ -40,14 +40,13 @@ export class AuthComponent implements OnInit {
       this.loggingIn = true
       this.authService.login(val.username, val.password)
         .then(
-          (successCallback) => {
-            this.logger.info(`User is logged in with ${this.authService.loggedInUser.email}`);
+          () => {
+            this.logger.info(`User is logged in with ${this.authService.loggedInUser?.email}`);
             this.ngZone.run(() => {
               this.router.navigate(['/dashboard'])
             })
-          }
-        ).catch(
-          err => {
+          },
+          (err) => {
             this.errorMessage = err.message
             this.loginInvalid = true
           }
