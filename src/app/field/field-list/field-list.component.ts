@@ -18,7 +18,7 @@ import {LoggingService} from "../../logging/logging.service";
 export class FieldListComponent implements OnInit {
   allFields$!: Observable<Field[]>
   columnsToDisplay = ['id', 'name', 'owner', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
-  footerColumnsToDisplay = ['creater'];
+  footerColumnsToDisplay = ['creator'];
   dataSource = new MatTableDataSource<Field>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;

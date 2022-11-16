@@ -12,14 +12,10 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {Subject} from "rxjs";
 import {distinctUntilChanged, takeUntil} from "rxjs/operators";
 
-
-
 interface MonthEntry {
   value: number;
   viewValue: string;
 }
-
-
 
 @Component({
   selector: 'app-payable-list',
@@ -39,7 +35,7 @@ export class PayableListComponent implements OnInit, OnDestroy {
   )
 
   columnsToDisplay = ['category', 'subCategory', 'fieldNames', 'documentId', 'quantity', 'pricePerUnit', 'transactionDate', 'operations'];
-  footerColumnsToDisplay = ['creater'];
+  footerColumnsToDisplay = ['creator'];
   dataSource = new MatTableDataSource<Payable>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
@@ -119,4 +115,7 @@ export class PayableListComponent implements OnInit, OnDestroy {
     this.payableService.getDataForMonth(this.monthSelectorGroup.value.year!, this.monthSelectorGroup.value.month!, true)
   }
 
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 }

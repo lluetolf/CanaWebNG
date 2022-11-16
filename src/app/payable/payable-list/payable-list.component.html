@@ -2,6 +2,7 @@
 
   <mat-form-field class="data-table-search-input">
     <input matInput #inputBox
+           (keyup)="applyFilter(inputBox.value)"
            placeholder="Search here"
     />
   </mat-form-field>
@@ -71,7 +72,7 @@
       </mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="creater">
+    <ng-container matColumnDef="creator">
       <mat-footer-cell *matFooterCellDef>
         <button mat-raised-button color="primary" (click)="openCreatePayable()">Create</button>
       </mat-footer-cell>
