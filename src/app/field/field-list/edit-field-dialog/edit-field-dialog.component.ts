@@ -4,6 +4,7 @@ import {UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators} from
 import {FieldService} from "../../field.service";
 import {first} from "rxjs/operators";
 import {LoggingService} from "../../../logging/logging.service";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-edit-field-dialog',
@@ -12,15 +13,17 @@ import {LoggingService} from "../../../logging/logging.service";
 })
 export class EditFieldDialogComponent implements OnInit {
   fieldForm!: UntypedFormGroup;
-  loading = false;
+  loading$ = new Subject<boolean>();
   title = ""
+
   private get isCreateMode(): boolean {
     return this.data.fieldName == null;
   }
+
   errorMsg: string | undefined = undefined;
 
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: {fieldName: string},
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { fieldName: string },
               private fb: UntypedFormBuilder,
               private fieldService: FieldService,
               private logger: LoggingService,
@@ -38,10 +41,10 @@ export class EditFieldDialogComponent implements OnInit {
       cultivatedArea: ['', Validators.required],
       acquisitionDate: ['', Validators.required],
       ingenioId: ['', Validators.required],
-      lastUpdated: ['', Validators.required, ],
+      lastUpdated: ['', Validators.required],
     });
 
-    if(this.isCreateMode) {
+    if (this.isCreateMode) {
       this.title = "Create Field"
       this.fieldForm.controls['lastUpdated'].setValue(new Date())
     } else {
@@ -52,6 +55,14 @@ export class EditFieldDialogComponent implements OnInit {
         .subscribe(x => this.fieldForm.patchValue(x!));
     }
     this.fieldForm.controls['lastUpdated'].disable()
+    this.loading$.subscribe(x => {
+        if (x) {
+          this.fieldForm.disable()
+        } else {
+          this.fieldForm.enable()
+        }
+      }
+    )
   }
 
   save() {
@@ -60,8 +71,8 @@ export class EditFieldDialogComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
-    if( this.isCreateMode)
+    this.loading$.next(true)
+    if (this.isCreateMode)
       this.create();
     else
       this.update();
@@ -78,7 +89,10 @@ export class EditFieldDialogComponent implements OnInit {
         error: error => {
           this.logger.error(error)
           this.errorMsg = (error.message) ? error.message : (error.status) ? `${error.status} - ${error.statusText}` : 'Server error';
-          this.loading = false;
+          this.loading$.next(false);
+        },
+        complete: () => {
+          this.loading$.next(false);
         }
       });
   }
@@ -98,7 +112,10 @@ export class EditFieldDialogComponent implements OnInit {
         error: error => {
           this.logger.error(error)
           this.errorMsg = (error.message) ? error.message : (error.status) ? `${error.status} - ${error.statusText}` : 'Server error';
-          this.loading = false;
+          this.loading$.next(false);
+        },
+        complete: () => {
+          this.loading$.next(false);
         }
       });
   }

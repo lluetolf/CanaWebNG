@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Payable} from "../payable.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {PayableService} from "../payable.service";
@@ -8,6 +8,9 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {EditPayableDialogComponent} from "./edit-payable-dialog/edit-payable-dialog.component";
 import {DeletePayableDialogComponent} from "./delete-payable-dialog/delete-payable-dialog.component";
+import {FormControl, FormGroup} from "@angular/forms";
+import {Subject} from "rxjs";
+import {distinctUntilChanged, takeUntil} from "rxjs/operators";
 
 
 
@@ -23,11 +26,17 @@ interface MonthEntry {
   templateUrl: './payable-list.component.html',
   styleUrls: ['./payable-list.component.scss']
 })
-export class PayableListComponent implements OnInit {
+export class PayableListComponent implements OnInit, OnDestroy {
+  readonly destroy$ = new Subject<void>();
+
   years: number[] = this.getYearList()
   months: MonthEntry[] = this.getMonthList();
-  selectedMonth: number = (new Date()).getMonth();
-  selectedYear: number = (new Date()).getFullYear();
+  monthSelectorGroup = new FormGroup(
+    {
+      year: new FormControl(),
+      month: new FormControl()
+    }
+  )
 
   columnsToDisplay = ['category', 'subCategory', 'fieldNames', 'documentId', 'quantity', 'pricePerUnit', 'transactionDate', 'operations'];
   footerColumnsToDisplay = ['creater'];
@@ -48,9 +57,14 @@ export class PayableListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth)
+    this.monthSelectorGroup.valueChanges.pipe(takeUntil(this.destroy$), distinctUntilChanged()).subscribe(() => this.updatePayableList() )
+    this.monthSelectorGroup.patchValue({year: new Date().getFullYear(), month: new Date().getMonth() })
   }
 
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete()
+  }
 
   getMonthList (locale = "en"): MonthEntry[] {
     let list: MonthEntry[] = [];
@@ -102,10 +116,7 @@ export class PayableListComponent implements OnInit {
   }
 
   public updatePayableList() {
-    this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth, true)
+    this.payableService.getDataForMonth(this.monthSelectorGroup.value.year!, this.monthSelectorGroup.value.month!, true)
   }
 
-  public showPayableList() {
-    this.payableService.getDataForMonth(this.selectedYear, this.selectedMonth, false)
-  }
 }

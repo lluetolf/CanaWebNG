@@ -6,28 +6,26 @@
     />
   </mat-form-field>
 
-  <div id="month-selecter">
-    <mat-form-field appearance="fill">
-      <mat-label>Year</mat-label>
-      <mat-select [(ngModel)]="selectedYear">
-        <mat-option *ngFor="let year of years" [value]="year">
-          {{ year.toString() }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <div id="month-selector">
+    <form [formGroup]="monthSelectorGroup">
+      <mat-form-field appearance="fill">
+        <mat-label>Year</mat-label>
+        <mat-select formControlName="year">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{ year.toString() }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Month</mat-label>
-      <mat-select [(ngModel)]="selectedMonth" name="month">
-        <mat-option *ngFor="let month of months" [value]="month.value">
-          {{month.viewValue}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <button mat-button mat-raised-button (click)="showPayableList()">
-      <mat-icon class="material-icons">play_circle_filled</mat-icon> Show
-    </button>
+      <mat-form-field appearance="fill">
+        <mat-label>Month</mat-label>
+        <mat-select formControlName="month">
+          <mat-option *ngFor="let month of months" [value]="month.value">
+            {{month.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </form>
   </div>
 
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
