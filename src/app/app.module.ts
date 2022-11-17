@@ -17,6 +17,7 @@ import {PayableModule} from "./payable/payable.module";
 import {DashboardModule} from "./dashboard/dashboard.module";
 import {AuthModule} from "./auth/auth.module";
 import {CacheInterceptor} from "./global/cache.interceptor";
+import { ReceivableModule } from './receivable/receivable.module';
 
 
 @NgModule({
@@ -45,6 +46,7 @@ import {CacheInterceptor} from "./global/cache.interceptor";
     AuthModule,
     FieldModule,
     PayableModule,
+    ReceivableModule,
     DashboardModule
   ],
   providers: [

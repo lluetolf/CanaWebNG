@@ -1,0 +1,13 @@
+<mat-accordion class="mat-elevation-z8" multi *ngFor="let receivable of receivables">
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ getTitle(receivable) }}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ getDescription(receivable) }}
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <app-receivable-detail [receivable]="receivable"></app-receivable-detail>
+  </mat-expansion-panel>
+</mat-accordion>

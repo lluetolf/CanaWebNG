@@ -1,7 +1,12 @@
 export interface Receivable {
-  transactionDate: Date;
-  documentId: string;
-  fieldId: number;
-  addedDate: Date;
-  items: [string, number];
+  ajuste?: ReceivablePhase;
+  preliquidation?: ReceivablePhase;
+  liquidation?: ReceivablePhase;
+}
+
+export interface ReceivablePhase {
+  ingenioId?: string;
+  pricePerUnit?: number;
+  tons?: number;
+  total?: number;
 }

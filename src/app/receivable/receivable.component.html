@@ -1,1 +1,16 @@
-<p>receivable works!</p>
+<mat-toolbar>Receivables</mat-toolbar>
+
+<div class="container">
+<mat-form-field appearance="fill">
+  <mat-label>Harvest</mat-label>
+  <mat-select [formControl]="harvestControl">
+    <mat-option *ngFor="let harvest of harvests" [value]="harvest">
+      {{ harvest }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
+<app-receivable-list [receivables]="receivables$ | async"></app-receivable-list>
+</div>
