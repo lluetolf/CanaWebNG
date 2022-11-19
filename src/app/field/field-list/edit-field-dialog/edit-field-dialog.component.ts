@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {UntypedFormBuilder, UntypedFormGroup, ValidationErrors, Validators} from "@angular/forms";
+import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {FieldService} from "../../field.service";
 import {first} from "rxjs/operators";
 import {LoggingService} from "../../../logging/logging.service";
@@ -55,6 +55,7 @@ export class EditFieldDialogComponent implements OnInit {
         .subscribe(x => this.fieldForm.patchValue(x!));
     }
     this.fieldForm.controls['lastUpdated'].disable()
+
     this.loading$.subscribe(x => {
         if (x) {
           this.fieldForm.disable()
@@ -76,6 +77,25 @@ export class EditFieldDialogComponent implements OnInit {
       this.create();
     else
       this.update();
+  }
+
+  private create() {
+    this.fieldService.create(this.fieldForm.getRawValue())
+      .pipe(first())
+      .subscribe({
+        next: f => {
+          this.logger.info(`Created successful with id:${f.id}`)
+          this.dialogRef.close()
+        },
+        error: error => {
+          this.logger.error(error)
+          this.errorMsg = (error.message) ? error.message : (error.status) ? `${error.status} - ${error.statusText}` : 'Server error';
+          this.loading$.next(false);
+        },
+        complete: () => {
+          this.loading$.next(false);
+        }
+      });
   }
 
   private update() {
@@ -101,24 +121,6 @@ export class EditFieldDialogComponent implements OnInit {
     this.dialogRef.close()
   }
 
-  private create() {
-    this.fieldService.create(this.fieldForm.getRawValue())
-      .pipe(first())
-      .subscribe({
-        next: f => {
-          this.logger.info(`Created successful with id:${f.id}`)
-          this.dialogRef.close()
-        },
-        error: error => {
-          this.logger.error(error)
-          this.errorMsg = (error.message) ? error.message : (error.status) ? `${error.status} - ${error.statusText}` : 'Server error';
-          this.loading$.next(false);
-        },
-        complete: () => {
-          this.loading$.next(false);
-        }
-      });
-  }
 
   private getFormValidationErrors() {
     Object.keys(this.fieldForm.controls).forEach(key => {
