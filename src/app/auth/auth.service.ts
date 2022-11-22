@@ -11,8 +11,19 @@ import {Subject} from "rxjs";
 export class AuthService {
   private LS_USER_KEY = 'app-currentUser'
   loggingIn$ = new Subject<boolean>();
-  loggedInUser: User|undefined;
+  private _loggedInUser!: User;
   private _accessToken: string = "";
+
+  public get loggedInUser(): User {
+    return this._loggedInUser
+  }
+
+  public set loggedInUser(value: User) {
+    this._loggedInUser = value
+    this.loggedInUser.getIdToken().then(x => {
+      this._accessToken = x;
+    })
+  }
 
   constructor(
     private logger: LoggingService,
@@ -39,15 +50,12 @@ export class AuthService {
   }
 
 
-  async login(email: string, password: string) {
+  login(email: string, password: string) {
     this.logger.info("Authenticating: " + email)
 
-    signInWithEmailAndPassword(this.auth, email, password)
+    return signInWithEmailAndPassword(this.auth, email, password)
       .then((result) => {
         this.loggedInUser = result.user
-        this.loggedInUser.getIdToken().then(x => {
-          this._accessToken = x;
-        })
       })
       .catch((error) => {
         this.logger.error(error.message);

@@ -5,11 +5,13 @@ env: standard
 service: canaweb-ui
 
 handlers:
-  - url: /
+  - url: /(.*\.(gif|png|jpg|css|js|ico)(|\.map))$
+    static_files: dist/CanaWebNG/\1
+    upload: dist/(.*)(|\.map)
+
+  - url: /(.*)
     static_files: dist/CanaWebNG/index.html
     upload: dist/CanaWebNG/index.html
-  - url: /
-    static_dir: dist/CanaWebNG
 
 
 

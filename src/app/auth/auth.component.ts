@@ -11,11 +11,9 @@ import {LoggingService} from "../logging/logging.service";
 })
 export class AuthComponent implements OnInit {
   form: UntypedFormGroup;
-  public loginInvalid = false;
+  public get loginInvalid() { return this.errorMessage != "" };
   public loggingIn = false;
-  public errorMessage = null;
-
-  private returnUrl: string;
+  public errorMessage: String = "";
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -25,7 +23,6 @@ export class AuthComponent implements OnInit {
     private logger: LoggingService
   ) {
     this.authService.loggingIn$.subscribe(x => this.loggingIn = x);
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/init';
 
     this.form = this.fb.group({
       username: ['', Validators.email],
@@ -34,17 +31,19 @@ export class AuthComponent implements OnInit {
   }
 
   login() {
-    this.errorMessage = null;
     if (this.form.valid) {
       const val = this.form.value;
-      this.authService.login(val.username, val.password)
+      this.authService.login(val.username, val.password).then(
+        () => {},
+        (err) => { this.errorMessage = "Error: " + err.message }
+      )
     }
   }
 
   ngOnInit(): void {
     if(this.authService.isLoggedIn) {
       this.logger.warn("Already logged in, going to /.");
-      this.router.navigateByUrl('/');
+      this.router.navigateByUrl('/dashboard');
     }
   }
 }
