@@ -11,18 +11,9 @@ import {Subject} from "rxjs";
 export class AuthService {
   private LS_USER_KEY = 'app-currentUser'
   loggingIn$ = new Subject<boolean>();
-  private _loggedInUser!: User;
-  private _accessToken: string = "";
 
   public get loggedInUser(): User {
-    return this._loggedInUser
-  }
-
-  public set loggedInUser(value: User) {
-    this._loggedInUser = value
-    this.loggedInUser.getIdToken().then(x => {
-      this._accessToken = x;
-    })
+    return this.auth.currentUser!
   }
 
   constructor(
@@ -54,9 +45,7 @@ export class AuthService {
     this.logger.info("Authenticating: " + email)
 
     return signInWithEmailAndPassword(this.auth, email, password)
-      .then((result) => {
-        this.loggedInUser = result.user
-      })
+      .then(() => {})
       .catch((error) => {
         this.logger.error(error.message);
         throw error;
@@ -71,9 +60,5 @@ export class AuthService {
       },
       () => { console.log("Error logging out.")}
     )
-  }
-
-  get accessToken(): string {
-    return this._accessToken
   }
 }

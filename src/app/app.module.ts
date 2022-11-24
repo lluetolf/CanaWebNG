@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { provideFirebaseApp, getApp, initializeApp } from '@angular/fire/app';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { connectAuthEmulator, getAuth, provideAuth } from "@angular/fire/auth";
 
 import { AppRoutingModule } from './app-routing.module';
@@ -29,7 +29,6 @@ import { ReceivableModule } from './receivable/receivable.module';
   ],
   imports: [
     provideAuth(() => {
-      console.log("Hello provideAuth")
       const auth = getAuth();
       if (environment.useEmulators) {
         connectAuthEmulator(auth, "http://localhost:9099")
