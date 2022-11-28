@@ -1,5 +1,4 @@
 import {BehaviorSubject, Observable, throwError} from "rxjs";
-import {environment} from "../../environments/environment";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {map} from "rxjs/operators";
 import {LoggingService} from "../logging/logging.service";
@@ -7,6 +6,7 @@ import {LoggingService} from "../logging/logging.service";
 export abstract class BaseService<T> {
   readonly url: string;
   private _data$ = new BehaviorSubject<T[]>([]);
+  public isLoading$ = new BehaviorSubject<boolean>(false);
 
 
 
@@ -33,7 +33,7 @@ export abstract class BaseService<T> {
     let urlGetAll = this.url + "/all"
     this.logger.info("Fetching date from: " + urlGetAll)
 
-    let fields$ = this.http.get<T[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
+    this.data$ = this.http.get<T[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
       map(
         (data: T[]) => {
           return data.map(d => {
@@ -47,7 +47,6 @@ export abstract class BaseService<T> {
         },
       )
     );
-    this.data$ = fields$
   }
 
 

@@ -9,7 +9,7 @@ import {MatSort} from "@angular/material/sort";
 import {EditPayableDialogComponent} from "./edit-payable-dialog/edit-payable-dialog.component";
 import {DeletePayableDialogComponent} from "./delete-payable-dialog/delete-payable-dialog.component";
 import {FormControl, FormGroup} from "@angular/forms";
-import {Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";
 import {distinctUntilChanged, takeUntil} from "rxjs/operators";
 
 interface MonthEntry {
@@ -39,6 +39,9 @@ export class PayableListComponent implements OnInit, OnDestroy {
   dataSource = new MatTableDataSource<Payable>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  public get isLoading$(): Observable<boolean> {
+    return this.payableService.isLoading$
+  }
 
 
   constructor(private payableService: PayableService,
@@ -53,8 +56,19 @@ export class PayableListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.monthSelectorGroup.valueChanges.pipe(takeUntil(this.destroy$), distinctUntilChanged()).subscribe(() => this.updatePayableList() )
+    this.monthSelectorGroup.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged()).subscribe(() => this.updatePayableList() )
     this.monthSelectorGroup.patchValue({year: new Date().getFullYear(), month: new Date().getMonth() })
+
+
+    this.payableService.isLoading$.subscribe(x => {
+      if (x) {
+        this.monthSelectorGroup.disable({ emitEvent: false })
+      } else {
+        this.monthSelectorGroup.enable({ emitEvent: false })
+      }
+    })
   }
 
   ngOnDestroy() {

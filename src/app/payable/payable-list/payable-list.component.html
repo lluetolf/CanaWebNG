@@ -29,6 +29,8 @@
     </form>
   </div>
 
+  <mat-progress-bar mode="indeterminate" *ngIf="this.isLoading$ | async"></mat-progress-bar>
+
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
     <ng-container matColumnDef="category">
       <mat-header-cell *matHeaderCellDef>Category</mat-header-cell>
