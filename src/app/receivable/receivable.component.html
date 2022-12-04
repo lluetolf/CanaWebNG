@@ -13,5 +13,5 @@
 
   <mat-progress-bar mode="indeterminate" *ngIf="this.isLoading$ | async"></mat-progress-bar>
 
-  <app-receivable-list [receivables]="receivables$ | async"></app-receivable-list>
+  <app-receivable-list [receivables]="this.receivables$ | async"></app-receivable-list>
 </div>
