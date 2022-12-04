@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { BaseService } from '../global/base-service';
 import { LoggingService } from '../logging/logging.service';
@@ -16,7 +15,4 @@ export class ReceivableService extends BaseService<Receivable> {
     super(http, logger, `${environment.apiBaseUri}/receivable`)
   }
 
-  getReceivables(harvest: string): Observable<Receivable[]> {
-    return this.http.get<Receivable[]>(this.url + "/all");
-  }
 }

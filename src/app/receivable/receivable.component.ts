@@ -3,8 +3,7 @@ import { OnDestroy } from '@angular/core';
 import { Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
-import { Receivable } from './receivable.model';
+import { takeUntil } from 'rxjs/operators';
 import { ReceivableService } from './receivable.service';
 
 @Component({
@@ -17,22 +16,18 @@ export class ReceivableComponent implements OnInit, OnDestroy {
 
   harvests = Array.from({ length: 4 }, (_, i) => `${new Date().getFullYear() - i}-${new Date().getFullYear() - i + 1}`);
   harvestControl = new FormControl();
-
-  receivables$ = new Subject<Receivable[]>();
-  loading$ = new Subject<boolean>();
+  public get receivables$() {
+    return this.receivableService.data$
+  }
+  public get isLoading$() {
+    return this.receivableService.isLoading$
+  }
 
   constructor(private receivableService: ReceivableService) { }
 
   ngOnInit(): void {
-    this.harvestControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe((harvest) => {
-      this.loading$.next(true);
-      console.log("loading")
-      this.receivableService.getReceivables(harvest).pipe(take(1)).subscribe((items) => {        
-        this.receivables$.next(items);
-        this.loading$.next(false);
-      }, () => {
-        this.loading$.next(false);
-      });
+    this.harvestControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.receivableService.refreshData()
     });
 
     this.harvestControl.patchValue(this.harvests[0]);

@@ -8,8 +8,6 @@ export abstract class BaseService<T> {
   private _data$ = new BehaviorSubject<T[]>([]);
   public isLoading$ = new BehaviorSubject<boolean>(false);
 
-
-
   get data$(): BehaviorSubject<T[]> {
     return this._data$
   }
