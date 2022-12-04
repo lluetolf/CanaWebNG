@@ -8,6 +8,8 @@
       />
     </mat-form-field>
 
+    <mat-progress-bar mode="indeterminate" *ngIf="this.isLoading$ | async"></mat-progress-bar>
+
     <mat-table [dataSource]="dataSource" class="mat-elevation-z8 data-table">
       <ng-container matColumnDef="id">
         <mat-header-cell *matHeaderCellDef> Id</mat-header-cell>

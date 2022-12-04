@@ -1,6 +1,6 @@
 import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
-import {map} from "rxjs/operators";
+import {delay, map, tap} from "rxjs/operators";
 import {LoggingService} from "../logging/logging.service";
 
 export abstract class BaseService<T> {
@@ -22,9 +22,9 @@ export abstract class BaseService<T> {
     this._data$.next(data)
   }
 
-  constructor(protected http: HttpClient,
-              protected logger: LoggingService,
-              url: string) {
+  protected constructor(protected http: HttpClient,
+                        protected logger: LoggingService,
+                        url: string) {
     this.url = url
     this.refreshData()
   }
@@ -32,20 +32,23 @@ export abstract class BaseService<T> {
   public refreshData(reset: boolean = false) {
     let urlGetAll = this.url + "/all"
     this.logger.info("Fetching date from: " + urlGetAll)
+    this.isLoading$.next(true)
 
     this.data$ = this.http.get<T[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
+      // delay(3000),
       map(
         (data: T[]) => {
           return data.map(d => {
             let dateFields = Object.keys(d).filter(x => x.includes("Date"))
             dateFields.forEach( (x) => {
-              console.log("Covnert: " + x);
+              console.log("Convert: " + x);
               (d as any)[x] = this.createDateAsUTC((d as any)[x]);
             })
             return d
           });
         },
-      )
+      ),
+      tap(() => this.isLoading$.next(false))
     );
   }
 

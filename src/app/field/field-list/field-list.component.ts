@@ -16,26 +16,27 @@ import {LoggingService} from "../../logging/logging.service";
   styleUrls: ['./field-list.component.scss']
 })
 export class FieldListComponent implements OnInit {
-  allFields$!: Observable<Field[]>
   columnsToDisplay = ['id', 'name', 'owner', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
   footerColumnsToDisplay = ['creator'];
   dataSource = new MatTableDataSource<Field>();
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  public get isLoading$(): Observable<boolean> {
+    return this.fieldService.isLoading$
+  }
 
   constructor(
     private fieldService: FieldService,
     public modifyDialog: MatDialog,
-    private logger: LoggingService) { }
-
-  ngOnInit(): void {
+    private logger: LoggingService) {
     this.logger.info("Init FieldListComponent")
-    this.allFields$ = this.fieldService.data$
-    this.allFields$.subscribe(fields => {
+    this.fieldService.data$.subscribe(fields => {
       this.dataSource.data = fields;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
+    });}
+
+  ngOnInit(): void {
     this.fieldService.refreshData()
   }
 
