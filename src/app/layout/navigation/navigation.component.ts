@@ -12,8 +12,8 @@ export class NavigationComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  notLoggedIn() {
-    return this.authService.isLoggedOut
+  isLoggedIn() {
+    return this.authService.isLoggedIn
   }
 
   logout() {

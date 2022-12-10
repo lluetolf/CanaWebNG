@@ -3,15 +3,15 @@
 
     <span class="mat-dialog-title main-title">CanaWeb.app</span>
 
-    <mat-nav-list  *ngIf="!notLoggedIn()" class="list-horizontal">
+    <mat-nav-list *ngIf="isLoggedIn()" class="list-horizontal">
       <mat-list-item routerLink="/dashboard" routerLinkActive="active">Dashboard</mat-list-item>
       <mat-list-item routerLink="/field" routerLinkActive="active">Field</mat-list-item>
       <mat-list-item routerLink="/payable" routerLinkActive="active">Payable</mat-list-item>
       <mat-list-item routerLink="/receivable" routerLinkActive="active">Receivable</mat-list-item>
     </mat-nav-list>
 
-    <mat-nav-list *ngIf="notLoggedIn()">
-      <a routerLink="/auth" routerLinkActive="active" *ngIf="notLoggedIn()">Auth</a>
+    <mat-nav-list *ngIf="!(isLoggedIn())">
+      <a routerLink="/auth" routerLinkActive="active">Auth</a>
     </mat-nav-list>
 
     <span class="example-spacer"></span>

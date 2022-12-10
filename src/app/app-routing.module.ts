@@ -14,12 +14,12 @@ const routes: Routes = [
   { path: 'payable', component: PayableComponent, canActivate: [AuthGuard]},
   { path: 'receivable', component: ReceivableComponent, canActivate: [AuthGuard]},
   { path: 'auth', component: AuthComponent },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/auth', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, )], //{enableTracing: true}
+  imports: [RouterModule.forRoot(routes)], //{enableTracing: true}
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

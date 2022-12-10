@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 
 import {LoggingService} from "../logging/logging.service";
-import {Auth, User, signInWithEmailAndPassword, signOut, authState} from "@angular/fire/auth";
+import {Auth, User, signInWithEmailAndPassword, signOut, authState, onAuthStateChanged} from "@angular/fire/auth";
 import {Router} from "@angular/router";
 import {Subject} from "rxjs";
 
@@ -21,6 +21,7 @@ export class AuthService {
     public auth: Auth,
     public router: Router
   ) {
+    this.logger.info("Create AuthService")
     this.loggingIn$.next(false);
     authState(this.auth).subscribe((user) => {
       if(user) {
@@ -30,22 +31,25 @@ export class AuthService {
         localStorage.setItem(this.LS_USER_KEY, "");
       }
     })
+    // onAuthStateChanged(this.auth, user => {
+    //   if(user) {
+    //     this.logger.info("Write user to localStorage.")
+    //     localStorage.setItem(this.LS_USER_KEY, JSON.stringify(user));
+    //     this.router.navigate(['']);
+    //   } else {
+    //     localStorage.setItem(this.LS_USER_KEY, "");
+    //   }
+    // })
   }
 
   get isLoggedIn(): boolean {
-    return this.auth.currentUser != null;
-  }
-
-  get isLoggedOut(): boolean {
-    return !this.isLoggedIn;
+    return this.auth.currentUser != null
   }
 
 
   login(email: string, password: string) {
-    this.logger.info("Authenticating: " + email)
-
     return signInWithEmailAndPassword(this.auth, email, password)
-      .then(() => {})
+      .then(() => { this.logger.info("Authenticated: " + email) })
       .catch((error) => {
         this.logger.error(error.message);
         throw error;
