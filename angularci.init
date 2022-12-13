@@ -7,6 +7,7 @@
 ng new CanaWebNG --routing --style scss --commit
 cd CanaWebNG
 npm install angular-in-memory-web-api --save-dev
+npm install chart.js
 ng add @angular/material
 ng generate module material --module=app # copy content
 
