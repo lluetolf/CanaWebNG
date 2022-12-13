@@ -18,7 +18,7 @@ interface MonthTotal {
 })
 export class PayableService extends BaseService<Payable> {
 
-  readonly concepts = ["AGROQUIMICOS", "COMIDA", "COSECHA", "FERTILIZANTES", "GASOLINA", "MANO DE OBRA"]
+  readonly concepts = ["AGROQUIMICOS", "COMIDA", "COSECHA", "FERTILIZANTES", "GASOLINA", "MANO DE OBRA", "INTERESES POR FINANCIAMIENTO"]
 
   constructor(http: HttpClient,
     logger: LoggingService) {
@@ -60,7 +60,7 @@ export class PayableService extends BaseService<Payable> {
         payables => {
           let selected = payables.filter(f => f.payableId === payableId);
           if(selected.length > 0) {
-            var s: Payable = selected[0]
+            const s: Payable = selected[0]
             s.transactionDate = this.createDateAsUTC(s.transactionDate)
             return s
           }
