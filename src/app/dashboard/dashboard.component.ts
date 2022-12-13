@@ -4,7 +4,8 @@ import {PayableService} from "../payable/payable.service";
 import {map, tap} from "rxjs/operators";
 import {MonthTotal} from "../payable/monthtotal.model";
 import {LoggingService} from "../logging/logging.service";
-import {Observable} from "rxjs";
+import {Observable, Subject} from "rxjs";
+
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +18,8 @@ export class DashboardComponent implements OnInit {
   public commitSha: String;
   public branchName: String;
 
+  public summaryChart$ = new Subject<Map<number, number[]>>;
+
   constructor(private payableService: PayableService, private logger: LoggingService) {
     this.env = environment.release.env
     this.buildTime = environment.release.buildTime
@@ -25,10 +28,28 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadPayableSummary().subscribe()
+     this.createPayableSummary().pipe(
+      map(x => {
+        let years = new Map<number, number[]>();
+        x.forEach(entry => {
+          const year = years.get(entry.year)
+          if(year === undefined) {
+            const newYear = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            newYear[entry.month] = entry.total
+            years.set(entry.year, newYear)
+          } else {
+            year[entry.month] = entry.total
+          }
+        })
+        return years
+      })
+    ).subscribe( x => {
+      this.summaryChart$.next(x)
+       this.logger.info("Hello" + x.get(2022))
+     })
   }
 
-  private loadPayableSummary(): Observable<MonthTotal[]> {
+  private createPayableSummary(): Observable<MonthTotal[]> {
     this.logger.info("Init DashboardComponent")
     return this.payableService.data$.pipe(
       map(x => {

@@ -4,10 +4,21 @@
   margin: 8px;
 }
 
+.summary {
+  min-width: 400px;
+  margin: 8px;
+}
+
 ul {
   column-count: 2;
 }
 
 li {
   list-style: none;
+}
+
+#summaryChart {
+  display: block;
+  width: 400px;
+  height: 400px;
 }

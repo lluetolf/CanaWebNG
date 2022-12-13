@@ -1,4 +1,3 @@
-
 <mat-card class="env-info">
   <mat-card-title-group>
     <mat-card-title>Release Details</mat-card-title>
@@ -14,6 +13,18 @@
     <li>{{commitSha.substring(0, 8)}}</li>
     <li>{{branchName}}</li>
   </ul>
+</mat-card>
+
+<mat-card class="summary">
+  <mat-card-title-group>
+    <mat-card-title>Summary</mat-card-title>
+  </mat-card-title-group>
+
+  <mat-card-content>
+    <div>
+      <app-summary-chart [dataSource]="summaryChart$"></app-summary-chart>
+    </div>
+  </mat-card-content>
 </mat-card>
 
 

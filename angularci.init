@@ -23,6 +23,7 @@ ng generate component layout/footer --skip-tests
 # Dashboard
 ng generate module dashboard
 ng generate component dashboard --skip-tests
+ng generate component dashboard/summary-chart --skip-tests
 ng generate service dashboard/dashboard --skip-tests
 
 # PageNotFound
