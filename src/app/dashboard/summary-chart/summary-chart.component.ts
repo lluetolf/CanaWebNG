@@ -41,7 +41,8 @@ const NAMED_COLORS = [
 @Component({
   selector: 'app-summary-chart',
   template: `
-      <canvas #chart width="600" height="200"></canvas>
+    <canvas #chart width="600" height="200"></canvas>
+    <canvas #yearlyTotalChart width="600" height="200"></canvas>
   `,
   styleUrls: ['./summary-chart.component.scss']
 })
@@ -49,7 +50,11 @@ export class SummaryChartComponent implements AfterViewInit {
   @ViewChild('chart')
   private chartRef!: ElementRef;
   private chart!: Chart;
-  private readonly data: number[] = [];
+
+  @ViewChild('yearlyTotalChart')
+  private yearlyTotalChartRef!: ElementRef;
+  private yearlyTotalChart!: Chart;
+
 
   @Input()
   public dataSource!: Observable<Map<number, number[]>>;
@@ -62,12 +67,14 @@ export class SummaryChartComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSourceSubscription = this.dataSource.subscribe(values => {
       const datasets: { label: string, data: number[], fill: boolean }[] = []
-      values.forEach((v, k)=> {
+      const yearlyTotal: { year: string, total: number }[] = []
+      values.forEach((v, k) => {
         datasets.push({
           label: "Year " + k,
-            data: v,
-            fill: false
+          data: v,
+          fill: false
         })
+        yearlyTotal.push({year: "" + k, total: v.reduce((acc, cur) => acc += cur, 0)})
       })
 
       this.chart = new Chart(this.chartRef.nativeElement, {
@@ -75,6 +82,44 @@ export class SummaryChartComponent implements AfterViewInit {
         data: {
           labels: labels,
           datasets: datasets
+        },
+        options: {
+          responsive: false,
+          scales: {
+            x: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+
+      this.yearlyTotalChart = new Chart(this.yearlyTotalChartRef.nativeElement, {
+        type: 'bar',
+        data: {
+          labels: yearlyTotal.map(v => v.year),
+          datasets: [{
+            label: "Total annual cost",
+            data: yearlyTotal.map(v => v.total),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(255, 159, 64, 0.2)',
+              'rgba(255, 205, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(201, 203, 207, 0.2)'
+            ],
+            borderColor: [
+              'rgb(255, 99, 132)',
+              'rgb(255, 159, 64)',
+              'rgb(255, 205, 86)',
+              'rgb(75, 192, 192)',
+              'rgb(54, 162, 235)',
+              'rgb(153, 102, 255)',
+              'rgb(201, 203, 207)'
+            ],
+            borderWidth: 1
+          }]
         },
         options: {
           responsive: false,
