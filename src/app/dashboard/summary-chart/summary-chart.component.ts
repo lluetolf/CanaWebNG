@@ -68,7 +68,9 @@ export class SummaryChartComponent implements AfterViewInit {
     this.dataSourceSubscription = this.dataSource.subscribe(values => {
       const datasets: { label: string, data: number[], fill: boolean }[] = []
       const yearlyTotal: { year: string, total: number }[] = []
-      values.forEach((v, k) => {
+
+      const sortedValues = new Map([...values.entries()].sort());
+      sortedValues.forEach((v, k) => {
         datasets.push({
           label: "Year " + k,
           data: v,
