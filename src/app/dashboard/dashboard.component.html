@@ -1,30 +1,32 @@
-<mat-card class="env-info">
-  <mat-card-title-group>
-    <mat-card-title>Release Details</mat-card-title>
-  </mat-card-title-group>
-
-  <ul>
-    <li>Env</li>
-    <li>Time</li>
-    <li>Hash</li>
-    <li>Branch</li>
-    <li>{{env}}</li>
-    <li>{{buildTime}}</li>
-    <li>{{commitSha.substring(0, 8)}}</li>
-    <li>{{branchName}}</li>
-  </ul>
-</mat-card>
-
-<mat-card class="summary">
-  <mat-card-title-group>
-    <mat-card-title>Summary</mat-card-title>
-  </mat-card-title-group>
-
-  <mat-card-content>
-    <div>
+<div id="card-container">
+  <mat-card class="payable-summary">
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title>Summary</mat-card-title>
+      </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content>
       <app-summary-chart [dataSource]="summaryChart$"></app-summary-chart>
-    </div>
-  </mat-card-content>
-</mat-card>
+    </mat-card-content>
+  </mat-card>
 
-
+  <mat-card class="release-info">
+    <mat-card-header>
+      <mat-card-title-group>
+        <mat-card-title>Release Details</mat-card-title>
+      </mat-card-title-group>
+    </mat-card-header>
+    <mat-card-content>
+      <ul>
+        <li>Env</li>
+        <li>Time</li>
+        <li>Hash</li>
+        <li>Branch</li>
+        <li>{{env}}</li>
+        <li>{{buildTime}}</li>
+        <li>{{commitSha.substring(0, 8)}}</li>
+        <li>{{branchName}}</li>
+      </ul>
+    </mat-card-content>
+  </mat-card>
+</div>

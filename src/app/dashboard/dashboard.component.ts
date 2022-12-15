@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {PayableService} from "../payable/payable.service";
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {MonthTotal} from "../payable/monthtotal.model";
 import {LoggingService} from "../logging/logging.service";
 import {Observable, Subject} from "rxjs";
@@ -28,12 +28,12 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-     this.createPayableSummary().pipe(
+    this.createPayableSummary().pipe(
       map(x => {
         let years = new Map<number, number[]>();
         x.forEach(entry => {
           const year = years.get(entry.year)
-          if(year === undefined) {
+          if (year === undefined) {
             const newYear = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             newYear[entry.month] = entry.total
             years.set(entry.year, newYear)
@@ -43,10 +43,9 @@ export class DashboardComponent implements OnInit {
         })
         return years
       })
-    ).subscribe( x => {
+    ).subscribe(x => {
       this.summaryChart$.next(x)
-       this.logger.info("Hello" + x.get(2022))
-     })
+    })
   }
 
   private createPayableSummary(): Observable<MonthTotal[]> {
@@ -66,8 +65,7 @@ export class DashboardComponent implements OnInit {
             }
             return acc
           }, [])
-      }),
-      tap(x => this.logger.info((x.map(a => a.year + "-" + a.month + " : " + a.total)).join(", ")))
+      })
     )
   }
 }
