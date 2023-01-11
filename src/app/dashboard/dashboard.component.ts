@@ -4,7 +4,7 @@ import {PayableService} from "../payable/payable.service";
 import {delay, map, tap} from "rxjs/operators";
 import {MonthTotal} from "../payable/monthtotal.model";
 import {LoggingService} from "../logging/logging.service";
-import {Observable, Subject} from "rxjs";
+import {Observable, Subject, BehaviorSubject} from "rxjs";
 
 
 @Component({
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit {
   public branchName: String;
 
   public summaryChart$ = new Subject<Map<number, number[]>>;
-  public isLoading$ = new Subject<boolean>;
+  public isLoading$ = new BehaviorSubject<boolean>(false);
 
   constructor(private payableService: PayableService, private logger: LoggingService) {
     this.env = environment.release.env
@@ -29,6 +29,9 @@ export class DashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.logger.info("Init DashboardComponent")
+
+    this.isLoading$.next(true)
     this.createPayableSummary().pipe(
       map(x => {
         let years = new Map<number, number[]>();
@@ -45,16 +48,14 @@ export class DashboardComponent implements OnInit {
         return years
       }),
     ).subscribe(x => {
-      this.logger.info("Summary ready.")
       this.summaryChart$.next(x)
+      this.isLoading$.next(false)
     })
   }
 
   private createPayableSummary(): Observable<MonthTotal[]> {
-    this.logger.info("Init DashboardComponent")
     return this.payableService.data$.pipe(
-      tap(() => this.isLoading$.next(true)),
-      delay(0),
+      delay(5000),
       map(x => {
         return x.map<MonthTotal>(p => new MonthTotal(
           p.transactionDate.getFullYear(),
@@ -69,8 +70,7 @@ export class DashboardComponent implements OnInit {
             }
             return acc
           }, [])
-      }),
-      tap(() => this.isLoading$.next(false)),
+      })
     )
   }
 }
