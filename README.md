@@ -1,16 +1,23 @@
 # CanaWebNG
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 12.2.7.
+This project runs [Angular 15](https://https://angular.io/) and was generated with [Angular CLI](https://github.com/angular/angular-cli).
 
-TODO
+## TODO
 - Footer needs content
-
-
+- Dashboard requires a loading animation
+- Relogin doesn't work on token expiry. 
 
 ## Local setup
-cd /mnt/c/Users/lukas/projects/canaweb-dev-local/  
-firebase emulators:start  
-CLI Server: run start-local  
-  
-## PROD 
-CLI Server run build --configuration=production
+
+1. Run the Firebase emulator.  
+``firebase emulators:start``  
+``run start-local``
+2. Run the API (CanaWeb-Api)
+3. Run CLI Server  
+``CLI Server: run start-local``
+
+## PROD
+Local for testing: ``CLI Server run build --configuration=production``
+Deploy: push to dev branch to trigger cloudbuild.
+
+
