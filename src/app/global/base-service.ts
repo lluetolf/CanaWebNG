@@ -1,9 +1,9 @@
 import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
-import {delay, map, tap} from "rxjs/operators";
+import {map, tap} from "rxjs/operators";
 import {LoggingService} from "../logging/logging.service";
 
-export abstract class BaseService<T> {
+export abstract class BaseService<T extends  Object> {
   readonly url: string;
   private _data$ = new BehaviorSubject<T[]>([]);
   public isLoading$ = new BehaviorSubject<boolean>(false);
@@ -51,9 +51,10 @@ export abstract class BaseService<T> {
   }
 
 
-  protected  createDateAsUTC(date: Date): Date {
+  protected  createDateAsUTC(date: Date | string): Date {
     if(typeof date === 'string')
       date = new Date(date)
+
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));
   }
 
