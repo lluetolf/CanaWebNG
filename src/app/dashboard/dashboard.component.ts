@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {PayableService} from "../payable/payable.service";
-import {map} from "rxjs/operators";
+import {delay, map, tap} from "rxjs/operators";
 import {MonthTotal} from "../payable/monthtotal.model";
 import {LoggingService} from "../logging/logging.service";
 import {Observable, Subject} from "rxjs";
@@ -19,6 +19,7 @@ export class DashboardComponent implements OnInit {
   public branchName: String;
 
   public summaryChart$ = new Subject<Map<number, number[]>>;
+  public isLoading$ = new Subject<boolean>;
 
   constructor(private payableService: PayableService, private logger: LoggingService) {
     this.env = environment.release.env
@@ -42,8 +43,9 @@ export class DashboardComponent implements OnInit {
           }
         })
         return years
-      })
+      }),
     ).subscribe(x => {
+      this.logger.info("Summary ready.")
       this.summaryChart$.next(x)
     })
   }
@@ -51,6 +53,8 @@ export class DashboardComponent implements OnInit {
   private createPayableSummary(): Observable<MonthTotal[]> {
     this.logger.info("Init DashboardComponent")
     return this.payableService.data$.pipe(
+      tap(() => this.isLoading$.next(true)),
+      delay(0),
       map(x => {
         return x.map<MonthTotal>(p => new MonthTotal(
           p.transactionDate.getFullYear(),
@@ -65,7 +69,8 @@ export class DashboardComponent implements OnInit {
             }
             return acc
           }, [])
-      })
+      }),
+      tap(() => this.isLoading$.next(false)),
     )
   }
 }

@@ -41,15 +41,15 @@ const NAMED_COLORS = [
 @Component({
   selector: 'app-summary-chart',
   template: `
-    <canvas #chart width="600" height="200"></canvas>
+    <canvas #monthlyTotalChart width="600" height="200"></canvas>
     <canvas #yearlyTotalChart width="600" height="200"></canvas>
   `,
   styleUrls: ['./summary-chart.component.scss']
 })
 export class SummaryChartComponent implements AfterViewInit {
-  @ViewChild('chart')
-  private chartRef!: ElementRef;
-  private chart!: Chart;
+  @ViewChild('monthlyTotalChart')
+  private monthlyTotalChartRef!: ElementRef;
+  private monthlyTotalChart!: Chart;
 
   @ViewChild('yearlyTotalChart')
   private yearlyTotalChartRef!: ElementRef;
@@ -79,7 +79,9 @@ export class SummaryChartComponent implements AfterViewInit {
         yearlyTotal.push({year: "" + k, total: v.reduce((acc, cur) => acc += cur, 0)})
       })
 
-      this.chart = new Chart(this.chartRef.nativeElement, {
+      if(this.monthlyTotalChart)
+        this.monthlyTotalChart.destroy()
+      this.monthlyTotalChart = new Chart(this.monthlyTotalChartRef.nativeElement, {
         type: 'line',
         data: {
           labels: labels,
@@ -95,6 +97,8 @@ export class SummaryChartComponent implements AfterViewInit {
         }
       });
 
+      if(this.yearlyTotalChart)
+        this.yearlyTotalChart.destroy()
       this.yearlyTotalChart = new Chart(this.yearlyTotalChartRef.nativeElement, {
         type: 'bar',
         data: {

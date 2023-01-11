@@ -6,6 +6,7 @@
       </mat-card-title-group>
     </mat-card-header>
     <mat-card-content>
+      <mat-progress-bar mode="indeterminate" *ngIf="this.isLoading$ | async"></mat-progress-bar>
       <app-summary-chart [dataSource]="summaryChart$"></app-summary-chart>
     </mat-card-content>
   </mat-card>
