@@ -48,7 +48,7 @@ export class PayableListComponent implements OnInit, OnDestroy {
               public modifyDialog: MatDialog,
               private logger: LoggingService) {
     this.logger.info("Init PayableListComponent")
-    this.payableService.data$.subscribe((payables) => {
+    this.payableService.selectedPayables$.subscribe((payables) => {
       this.dataSource.data = payables;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -126,7 +126,7 @@ export class PayableListComponent implements OnInit, OnDestroy {
   }
 
   public updatePayableList() {
-    this.payableService.getDataForMonth(this.monthSelectorGroup.value.year!, this.monthSelectorGroup.value.month!, true)
+    this.payableService.getDataForMonth(this.monthSelectorGroup.value.year!, this.monthSelectorGroup.value.month!)
   }
 
   applyFilter(filterValue: string) {

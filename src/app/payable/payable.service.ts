@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Payable} from "./payable.model";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 import {LoggingService} from "../logging/logging.service";
 import {environment} from "../../environments/environment";
 import {catchError, map} from "rxjs/operators";
 import {BaseService} from "../global/base-service";
-import {Observable} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 
 interface MonthTotal {
   year: number;
@@ -20,42 +20,32 @@ export class PayableService extends BaseService<Payable> {
 
   readonly concepts = ["AGROQUIMICOS", "COMIDA", "COSECHA", "FERTILIZANTES", "GASOLINA", "MANO DE OBRA", "INTERESES POR FINANCIAMIENTO"]
 
+  private _selectedPayables$ = new BehaviorSubject<Payable[]>([]);
+
+  get selectedPayables$(): BehaviorSubject<Payable[]> {
+    return this._selectedPayables$
+  }
+
   constructor(http: HttpClient,
     logger: LoggingService) {
     super(http, logger, `${environment.apiBaseUri}/payable`)
   }
 
-  getDataForMonth(year: number, month: number, reset = false) {
-    let urlGetAll = this.url + `/month?year=${year}&month=${month+1}`;
-    this.logger.info("Get data for: " + urlGetAll);
+  getDataForMonth(year: number, month: number) {
     this.isLoading$.next(true)
 
-    let payables$ = this.http.get<Payable[]>(urlGetAll,
-      { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
-      map(
-        (data: Payable[]) => {
-          return data.map(d => {
-            let dateFields = Object.keys(d).filter(x => x.includes("Date"))
-            dateFields.forEach( (x) => {
-              console.log("Convert: " + x);
-              (d as any)[x] = this.createDateAsUTC((d as any)[x]);
-            })
-            return d
-          });
-        },
-      )
-    );
-    payables$.subscribe(x => {
-      this.data$.next(x)
+    super.data$.pipe(
+      map( d => d.filter(v => { return v.transactionDate.getMonth() === month && v.transactionDate.getFullYear() === year }))
+    ).subscribe(x => {
+      this._selectedPayables$.next(x)
       this.isLoading$.next(false)
     })
-    this.data$ = payables$
   }
 
   getPayable(payableId: string): Observable<Payable | null> {
     this.logger.info("Get payable: " + payableId)
 
-    return this.data$!.pipe(
+    return super.data$!.pipe(
       map(
         payables => {
           let selected = payables.filter(f => f.payableId === payableId);

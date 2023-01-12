@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {PayableService} from "../payable/payable.service";
-import {delay, map, tap} from "rxjs/operators";
+import {delay, map} from "rxjs/operators";
 import {MonthTotal} from "../payable/monthtotal.model";
 import {LoggingService} from "../logging/logging.service";
 import {Observable, Subject, BehaviorSubject} from "rxjs";
@@ -55,7 +55,7 @@ export class DashboardComponent implements OnInit {
 
   private createPayableSummary(): Observable<MonthTotal[]> {
     return this.payableService.data$.pipe(
-      delay(5000),
+      //delay(5000),
       map(x => {
         return x.map<MonthTotal>(p => new MonthTotal(
           p.transactionDate.getFullYear(),

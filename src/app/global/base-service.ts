@@ -4,6 +4,11 @@ import {map, tap} from "rxjs/operators";
 import {LoggingService} from "../logging/logging.service";
 
 export abstract class BaseService<T extends  Object> {
+/**
+ * Base class for all DB Entities.
+ * _data$ loads the entire data and scoping should be done in the child class.
+ *
+ */
   readonly url: string;
   private _data$ = new BehaviorSubject<T[]>([]);
   public isLoading$ = new BehaviorSubject<boolean>(false);
@@ -14,10 +19,6 @@ export abstract class BaseService<T extends  Object> {
 
   set data$(data$: Observable<T[]>) {
     data$.subscribe(data => this._data$.next(data))
-  }
-
-  set data(data: T[]) {
-    this._data$.next(data)
   }
 
   protected constructor(protected http: HttpClient,
@@ -32,7 +33,7 @@ export abstract class BaseService<T extends  Object> {
     this.logger.info("Fetching date from: " + urlGetAll)
     this.isLoading$.next(true)
 
-    this.data$ = this.http.get<T[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
+    return this.data$ = this.http.get<T[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
       // delay(3000),
       map(
         (data: T[]) => {
@@ -47,7 +48,7 @@ export abstract class BaseService<T extends  Object> {
         },
       ),
       tap(() => this.isLoading$.next(false))
-    );
+    )
   }
 
 
