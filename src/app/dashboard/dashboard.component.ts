@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {PayableService} from "../payable/payable.service";
 import {delay, map} from "rxjs/operators";
@@ -12,7 +12,7 @@ import {Observable, Subject, BehaviorSubject} from "rxjs";
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, AfterViewInit {
   public env: String;
   public buildTime: String;
   public commitSha: String;
@@ -30,6 +30,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.logger.info("Init DashboardComponent")
+  }
+
+  ngAfterViewInit(): void {
+    this.logger.info("ngAfterViewInit DashboardComponent")
 
     this.isLoading$.next(true)
     this.createPayableSummary().pipe(

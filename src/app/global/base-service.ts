@@ -2,7 +2,11 @@ import {BehaviorSubject, Observable, throwError} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
 import {map, tap} from "rxjs/operators";
 import {LoggingService} from "../logging/logging.service";
+import {Injectable} from "@angular/core";
 
+@Injectable({
+  providedIn: 'root'
+})
 export abstract class BaseService<T extends  Object> {
 /**
  * Base class for all DB Entities.

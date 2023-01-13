@@ -19,8 +19,9 @@ export class FieldListComponent implements OnInit {
   columnsToDisplay = ['id', 'name', 'owner', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
   footerColumnsToDisplay = ['creator'];
   dataSource = new MatTableDataSource<Field>();
-  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort!: MatSort;
+
   public get isLoading$(): Observable<boolean> {
     return this.fieldService.isLoading$
   }
@@ -34,10 +35,11 @@ export class FieldListComponent implements OnInit {
       this.dataSource.data = fields;
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });}
+    });
+  }
 
   ngOnInit(): void {
-    this.fieldService.refreshData()
+    this.logger.info("Init FieldListComponent")
   }
 
   applyFilter(filterValue: string) {
@@ -73,7 +75,7 @@ export class FieldListComponent implements OnInit {
     };
 
     let dialogRef = this.modifyDialog.open(EditFieldDialogComponent, dialogConfig)
-    dialogRef .afterClosed().subscribe(() =>  this.fieldService.refreshData(true))
+    dialogRef.afterClosed().subscribe(() => this.fieldService.refreshData(true))
   }
 
 }
