@@ -16,7 +16,7 @@ import {LoggingService} from "../../logging/logging.service";
   styleUrls: ['./field-list.component.scss']
 })
 export class FieldListComponent implements OnInit {
-  columnsToDisplay = ['id', 'name', 'owner', 'size', 'cultivatedArea', 'acquisitionDate', 'ingenioId', 'operations'];
+  columnsToDisplay = ['name', 'owner', 'size', 'cultivatedArea', 'ingenioId', 'operations'];
   footerColumnsToDisplay = ['creator'];
   dataSource = new MatTableDataSource<Field>();
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
