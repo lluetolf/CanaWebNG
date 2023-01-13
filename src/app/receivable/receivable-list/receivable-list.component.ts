@@ -18,7 +18,7 @@ export class ReceivableListComponent {
       return "";
     }
 
-    return this.getFirstPhase(receivable)?.ingenioId ?? "";    
+    return receivable.name ?? "";
   }
 
   getDescription(receivable: Receivable): string {

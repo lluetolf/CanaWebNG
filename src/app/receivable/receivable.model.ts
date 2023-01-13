@@ -2,6 +2,7 @@ export interface Receivable {
   ajuste?: ReceivablePhase;
   preliquidation?: ReceivablePhase;
   liquidation?: ReceivablePhase;
+  name?: string;
 }
 
 export interface ReceivablePhase {
