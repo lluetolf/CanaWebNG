@@ -2,6 +2,11 @@ export interface Receivable {
   ajuste?: ReceivablePhase;
   preliquidation?: ReceivablePhase;
   liquidation?: ReceivablePhase;
+  ingenioId?: string;
+}
+
+export interface ConsolidatedReceivable {
+  receivables: Receivable[];
   name?: string;
 }
 

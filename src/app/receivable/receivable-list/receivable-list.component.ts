@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Receivable, ReceivablePhase } from '../receivable.model';
+import {ConsolidatedReceivable, ReceivablePhase} from '../receivable.model';
 
 @Component({
   selector: 'app-receivable-list',
@@ -9,19 +9,21 @@ import { Receivable, ReceivablePhase } from '../receivable.model';
 export class ReceivableListComponent {
 
   @Input()
-  receivables: Receivable[] | null = [];
+  consolidatedReceivables: ConsolidatedReceivable[] | null = [];
 
   constructor() { }
 
-  getTitle(receivable: Receivable): string {
-    if (!receivable) {
+  getTitle(consReceivable: ConsolidatedReceivable): string {
+    if (!consReceivable) {
       return "";
     }
 
-    return receivable.name ?? "";
+    return consReceivable.name ?? "";
   }
 
-  getDescription(receivable: Receivable): string {
+  // this isn't working properly, needs to sum up all the receivables for this field.
+  getDescription(consReceivable: ConsolidatedReceivable): string {
+    let receivable = consReceivable.receivables[0]
     if (!receivable) {
       return "";
     }
@@ -33,7 +35,8 @@ export class ReceivableListComponent {
     return `MX$${preTotal} | MX$${liqTotal} | MX$${ajuTotal}`
   }
 
-  private getFirstPhase(receivable: Receivable): ReceivablePhase | undefined {
+  private getFirstPhase(consReceivable: ConsolidatedReceivable): ReceivablePhase | undefined {
+    let receivable = consReceivable.receivables[0]
     if (!receivable) {
       return undefined;
     }

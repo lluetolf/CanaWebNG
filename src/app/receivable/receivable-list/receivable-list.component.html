@@ -1,4 +1,4 @@
-<mat-accordion class="mat-elevation-z8" multi *ngFor="let receivable of receivables">
+<mat-accordion class="mat-elevation-z8" multi *ngFor="let receivable of consolidatedReceivables">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -8,6 +8,6 @@
         {{ getDescription(receivable) }}
       </mat-panel-description>
     </mat-expansion-panel-header>
-    <app-receivable-detail [receivable]="receivable"></app-receivable-detail>
+    <app-receivable-detail [receivable]="r" *ngFor="let r of receivable.receivables"></app-receivable-detail>
   </mat-expansion-panel>
 </mat-accordion>

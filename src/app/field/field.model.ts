@@ -7,7 +7,7 @@ export interface Field extends BaseEntity {
   size: number;
   cultivatedArea: number;
   acquisitionDate: Date;
-  ingenioId: string;
+  ingenioId: string[];
   lastUpdated: Date;
 }
 

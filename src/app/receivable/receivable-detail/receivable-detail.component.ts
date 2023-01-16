@@ -16,10 +16,13 @@ type DataSourceModel = { phase: ReceivablePhaseType } & ReceivablePhase;
 })
 export class ReceivableDetailComponent {
 
+  ingenioId: string = "UNKNOWN"
+
   @Input()
   set receivable (value: Receivable | undefined) {
     if (value) {
       this.setDataSource(value);
+      this.ingenioId = value.ingenioId ? value.ingenioId: "ID NOT SET";
     }
   }
 
@@ -44,15 +47,15 @@ export class ReceivableDetailComponent {
       models.push({
         phase: ReceivablePhaseType.Liq,
         ...value.liquidation
-      })      
+      })
     }
 
     if (value.ajuste) {
       models.push({
         phase: ReceivablePhaseType.Aju,
         ...value.ajuste
-      })      
-    }    
+      })
+    }
 
     this.checkSuccess = this.validate(value);
     this.dataSource = models;

@@ -2,11 +2,11 @@ import {OnInit} from '@angular/core';
 import {OnDestroy} from '@angular/core';
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {combineLatest, forkJoin, Subject, zip} from 'rxjs';
+import {Subject, zip} from 'rxjs';
 import {map, takeUntil, tap} from 'rxjs/operators';
 import {ReceivableService} from './receivable.service';
 import {FieldService} from "../field/field.service";
-import {Receivable} from "./receivable.model";
+import {ConsolidatedReceivable, Receivable} from "./receivable.model";
 import {LoggingService} from "../logging/logging.service";
 
 @Component({
@@ -19,19 +19,18 @@ export class ReceivableComponent implements OnInit, OnDestroy {
 
   harvests = Array.from({length: 4}, (_, i) => `${new Date().getFullYear() - i}-${new Date().getFullYear() - i + 1}`);
   harvestControl = new FormControl();
-  private _receivables$ = zip(this.receivableService.data$, this.fieldService.data$)
-    .pipe(
+  private _receivables$ = zip(this.receivableService.data$, this.fieldService.data$).pipe(
     tap(() => this.logger.info("start")),
-    map(([r, f]) => {
-      r.forEach(x => {
-        let field = f.filter(f => f.ingenioId == this.getIngenioId(x))
-        if(field.length < 1)
-          x.name = "NO FIELD FOR ID"
-        else
-          x.name = field[0].name
+    map(([receivables, fields]) => {
+      let res: ConsolidatedReceivable[] = []
+
+      receivables.forEach(r => r.ingenioId = this.getIngenioId(r))
+      fields.forEach( f => {
+        let rs = receivables.filter(r => f.ingenioId.includes(r.ingenioId ? r.ingenioId : "UNKNOWN"))
+        res.push(<ConsolidatedReceivable>{name: f.name, receivables: rs})
       })
-      this.logger.info(r.length + " / " + f.length)
-      return r
+      this.logger.info(receivables.length + " / " + fields.length)
+      return res
     }),
     tap(() => this.logger.info("completed"))
   )
