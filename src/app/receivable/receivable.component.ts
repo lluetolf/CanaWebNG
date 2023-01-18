@@ -2,11 +2,9 @@ import {OnInit} from '@angular/core';
 import {OnDestroy} from '@angular/core';
 import {Component} from '@angular/core';
 import {FormControl} from '@angular/forms';
-import {Subject, zip} from 'rxjs';
-import {map, takeUntil, tap} from 'rxjs/operators';
+import {Subject} from 'rxjs';
+import {distinctUntilChanged, takeUntil} from 'rxjs/operators';
 import {ReceivableService} from './receivable.service';
-import {FieldService} from "../field/field.service";
-import {ConsolidatedReceivable, Receivable} from "./receivable.model";
 import {LoggingService} from "../logging/logging.service";
 
 @Component({
@@ -17,42 +15,28 @@ import {LoggingService} from "../logging/logging.service";
 export class ReceivableComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
-  harvests = Array.from({length: 4}, (_, i) => `${new Date().getFullYear() - i}-${new Date().getFullYear() - i + 1}`);
+  harvests = Array.from({length: 4}, (_, i) => `${(new Date().getFullYear() - i).toString().substring(2)}-${(new Date().getFullYear() - i + 1).toString().substring(2)}`);
   harvestControl = new FormControl();
-  private _receivables$ = zip(this.receivableService.data$, this.fieldService.data$).pipe(
-    tap(() => this.logger.info("start")),
-    map(([receivables, fields]) => {
-      let res: ConsolidatedReceivable[] = []
-
-      receivables.forEach(r => r.ingenioId = this.getIngenioId(r))
-      fields.forEach( f => {
-        let rs = receivables.filter(r => f.ingenioId.includes(r.ingenioId ? r.ingenioId : "UNKNOWN"))
-        res.push(<ConsolidatedReceivable>{name: f.name, receivables: rs})
-      })
-      this.logger.info(receivables.length + " / " + fields.length)
-      return res
-    }),
-    tap(() => this.logger.info("completed"))
-  )
 
   public get receivables$() {
-    return this._receivables$;
+    return this.receivableService.consolidatedReceivables$
   }
-
 
   public get isLoading$() {
     return this.receivableService.isLoading$
   }
 
   constructor(private receivableService: ReceivableService,
-              private fieldService: FieldService,
               private logger: LoggingService) {
   }
 
   ngOnInit(): void {
-    this.harvestControl.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(() => {
-      // this.receivableService.refreshData()
+    this.harvestControl.valueChanges.pipe(
+      takeUntil(this.destroy$),
+      distinctUntilChanged()).subscribe(() => {
+      this.updateReceivableList()
     });
+
 
     this.harvestControl.patchValue(this.harvests[0]);
   }
@@ -62,7 +46,8 @@ export class ReceivableComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private getIngenioId(r: Receivable) {
-    return r.preliquidation?.ingenioId ?? r.liquidation?.ingenioId ?? r.ajuste?.ingenioId ?? "UNKNOWN";
+
+  private updateReceivableList() {
+    this.receivableService.getDataForHarvest(this.harvestControl.value)
   }
 }

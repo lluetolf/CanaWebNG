@@ -3,6 +3,7 @@ export interface Receivable {
   preliquidation?: ReceivablePhase;
   liquidation?: ReceivablePhase;
   ingenioId?: string;
+  harvest?: string;
 }
 
 export interface ConsolidatedReceivable {
