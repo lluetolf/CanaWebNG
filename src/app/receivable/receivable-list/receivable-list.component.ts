@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {ConsolidatedReceivable, ReceivablePhase} from '../receivable.model';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-receivable-list',
@@ -9,7 +10,7 @@ import {ConsolidatedReceivable, ReceivablePhase} from '../receivable.model';
 export class ReceivableListComponent {
 
   @Input()
-  consolidatedReceivables: ConsolidatedReceivable[] | null = [];
+  consolidatedReceivables$!: Observable<ConsolidatedReceivable[]>;
 
   constructor() { }
 

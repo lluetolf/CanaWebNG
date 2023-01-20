@@ -1,4 +1,4 @@
-<mat-accordion class="mat-elevation-z8" multi *ngFor="let receivable of consolidatedReceivables">
+<mat-accordion class="mat-elevation-z8" multi *ngFor="let receivable of consolidatedReceivables$| async">
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>

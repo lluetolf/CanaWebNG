@@ -27,7 +27,8 @@ export class ReceivableService extends BaseService<Receivable> {
 
   getDataForHarvest(harvest: string) {
     this.isLoading$.next(true)
-    zip(this.data$, this.fieldService.data$).pipe(
+
+    zip(super.data$, this.fieldService.data$).pipe(
       map(([receivables, fields]) => {
         let res: ConsolidatedReceivable[] = []
 
@@ -45,7 +46,7 @@ export class ReceivableService extends BaseService<Receivable> {
       })
     ).subscribe(
       res => {
-        this.consolidatedReceivables$.next(res)
+        this._consolidatedReceivables$.next(res)
         this.isLoading$.next(false)
       }
     )
