@@ -12,7 +12,8 @@ export class ReceivableListComponent {
   @Input()
   consolidatedReceivables$!: Observable<ConsolidatedReceivable[]>;
 
-  constructor() { }
+  constructor() {
+  }
 
   getTitle(consReceivable: ConsolidatedReceivable): string {
     if (!consReceivable) {
@@ -24,25 +25,21 @@ export class ReceivableListComponent {
 
   // this isn't working properly, needs to sum up all the receivables for this field.
   getDescription(consReceivable: ConsolidatedReceivable): string {
-    let receivable = consReceivable.receivables[0]
-    if (!receivable) {
+    let preTotal = 0;
+    let liqTotal = 0;
+    let ajuTotal = 0;
+    consReceivable.receivables.forEach(r => {
+      preTotal += r.preliquidation?.total ?? 0;
+      liqTotal += r.liquidation?.total ?? 0;
+      ajuTotal += r.ajuste?.total ?? 0;
+    })
+    let totalTotal = Math.round(preTotal + liqTotal + ajuTotal)
+
+    if (consReceivable.receivables.length < 1) {
       return "";
     }
 
-    const preTotal = receivable.preliquidation?.total ?? "0";
-    const liqTotal = receivable.liquidation?.total ?? "0";
-    const ajuTotal = receivable.ajuste?.total ?? "0";
-
-    return `MX$${preTotal} | MX$${liqTotal} | MX$${ajuTotal}`
-  }
-
-  private getFirstPhase(consReceivable: ConsolidatedReceivable): ReceivablePhase | undefined {
-    let receivable = consReceivable.receivables[0]
-    if (!receivable) {
-      return undefined;
-    }
-
-    return receivable.preliquidation ?? receivable.liquidation ?? receivable.ajuste;
+    return `Pre MX$${preTotal.toLocaleString()} | Liq MX$${liqTotal.toLocaleString()} | Aju MX$${ajuTotal.toLocaleString()} | Total MX$${totalTotal.toLocaleString()}`
   }
 
 }
