@@ -30,11 +30,14 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.logger.info("Init DashboardComponent")
+    this.generateSummaries();
   }
 
   ngAfterViewInit(): void {
     this.logger.info("ngAfterViewInit DashboardComponent")
+  }
 
+  private generateSummaries() {
     this.isLoading$.next(true)
     this.createPayableSummary().pipe(
       map(x => {
