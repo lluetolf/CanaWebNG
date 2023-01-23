@@ -32,16 +32,16 @@ export class ReceivableService extends BaseService<Receivable> {
       map(([receivables, fields]) => {
         let res: ConsolidatedReceivable[] = []
 
-        receivables
+        let selectedReceivables: Receivable[] = receivables
           .filter(r => r.harvest == harvest)
-          .forEach(r => r.ingenioId = this.getIngenioId(r))
+        selectedReceivables.forEach(r => r.ingenioId = this.getIngenioId(r))
 
         fields.forEach(f => {
           let ingenioIds = f.ingenioId.map(f2 => f2.ingenioId)
-          let rs = receivables.filter(r => ingenioIds.includes(r.ingenioId ? r.ingenioId : "UNKNOWN"))
+          let rs = selectedReceivables.filter(r => ingenioIds.includes(r.ingenioId ? r.ingenioId : "UNKNOWN"))
           res.push(<ConsolidatedReceivable>{name: f.name, receivables: rs})
         })
-        this.logger.info(receivables.length + " / " + fields.length)
+        this.logger.info("R: " + selectedReceivables.length + " / " + receivables.length +", F: " + fields.length)
         return res
       })
     ).subscribe(
