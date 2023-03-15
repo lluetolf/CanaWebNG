@@ -37,7 +37,8 @@ export class PayableService extends BaseService<Payable> {
     this.data$.pipe(
       map(d => d.filter(v => {
         return v.transactionDate.getMonth() === month && v.transactionDate.getFullYear() === year
-      }))
+      })),
+      catchError(this.handleError)
     ).subscribe(x => {
       this._selectedPayables$.next(x)
       this.isLoading$.next(false)
@@ -48,27 +49,24 @@ export class PayableService extends BaseService<Payable> {
     this.logger.info("Get payable: " + payableId)
 
     return super.data$!.pipe(
-      map(
-        payables => payables.find(f => f.payableId === payableId)
-      )
+      map(payables => payables.find(f => f.payableId === payableId)),
+      catchError(this.handleError)
     )
   }
 
   create(params: any): Observable<Payable> {
-    return this.http.post<Payable>(this.url, params)
-      .pipe(
-        catchError(this.handleError),
-      )
+    return this.http.post<Payable>(this.url, params).pipe(
+      catchError(this.handleError),
+    )
   }
 
   update(payableId: string, payable: Payable): Observable<Payable> {
     const url = `${this.url}?payableId=${payableId}`
     this.logger.info("Update payable: " + payableId)
 
-    return this.http.put<Payable>(url, payable)
-      .pipe(
-        catchError(this.handleError),
-      )
+    return this.http.put<Payable>(url, payable).pipe(
+      catchError(this.handleError),
+    )
   }
 
   delete(payableId: string): Observable<boolean> {
@@ -76,17 +74,8 @@ export class PayableService extends BaseService<Payable> {
     this.logger.info("Delete payable: " + payableId)
 
     return this.http.delete(url).pipe(
-      map(() => {
-        return true;
-      }),
+      map(() => true),
       catchError(this.handleError)
     )
-  }
-
-  getTotalPerMonth(): Observable<MonthTotal> {
-    const url = `${this.url}/monthlytotals`
-    this.logger.info("getTotalPerMonth")
-
-    return this.http.get<MonthTotal>(url);
   }
 }
