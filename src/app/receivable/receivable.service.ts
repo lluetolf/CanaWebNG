@@ -5,7 +5,7 @@ import {BaseService} from '../global/base-service';
 import {LoggingService} from '../logging/logging.service';
 import {ConsolidatedReceivable, Receivable} from './receivable.model';
 import {BehaviorSubject, zip} from "rxjs";
-import {map} from "rxjs/operators";
+import {catchError, map} from "rxjs/operators";
 import {FieldService} from "../field/field.service";
 
 
@@ -43,7 +43,8 @@ export class ReceivableService extends BaseService<Receivable> {
         })
         this.logger.info("R: " + selectedReceivables.length + " / " + receivables.length +", F: " + fields.length)
         return res
-      })
+      }),
+      catchError(this.handleError)
     ).subscribe(
       res => {
         this._consolidatedReceivables$.next(res)
