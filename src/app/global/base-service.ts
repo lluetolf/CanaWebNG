@@ -1,50 +1,28 @@
-import {BehaviorSubject, Observable, throwError} from "rxjs";
+import {BehaviorSubject, throwError} from "rxjs";
 import {HttpClient, HttpErrorResponse, HttpHeaders} from "@angular/common/http";
-import {map, tap} from "rxjs/operators";
+import {map, mergeMap, shareReplay, tap} from "rxjs/operators";
 import {LoggingService} from "../logging/logging.service";
 import {Injectable} from "@angular/core";
 
 @Injectable({
   providedIn: 'root'
 })
-export abstract class BaseService<T extends  Object> {
-/**
- * Base class for all DB Entities.
- * _data$ loads the entire data and scoping should be done in the child class.
- *
- */
-  readonly url: string;
-  private _data$ = new BehaviorSubject<T[]>([]);
+export abstract class BaseService<T extends Object> {
+  /**
+   * Base class for all DB Entities.
+   * _data$ loads the entire data and scoping should be done in the child class.
+   *
+   */
+  private _refreshTrigger$ = new BehaviorSubject<void>(undefined);
   public isLoading$ = new BehaviorSubject<boolean>(false);
 
-  get data$(): BehaviorSubject<T[]> {
-    return this._data$
-  }
-
-  set data$(data$: Observable<T[]>) {
-    data$.subscribe(data => this._data$.next(data))
-  }
-
-  protected constructor(protected http: HttpClient,
-                        protected logger: LoggingService,
-                        url: string) {
-    this.url = url
-    this.refreshData()
-  }
-
-  public refreshData(reset: boolean = false) {
-    let urlGetAll = this.url + "/all"
-    this.logger.info("Fetching date from: " + urlGetAll)
-    this.isLoading$.next(true)
-
-    return this.data$ = this.http.get<T[]>(urlGetAll, { headers: new HttpHeaders({"reset": String(reset) }) }).pipe(
-      // delay(3000),
+  private readonly apiRequest$ =
+    this.http.get<T[]>(this.url + "/all", {headers: new HttpHeaders({"reset": String(false)})}).pipe(
       map(
         (data: T[]) => {
           return data.map(d => {
             let dateFields = Object.keys(d).filter(x => x.includes("Date"))
-            dateFields.forEach( (x) => {
-              console.log("Convert: " + x);
+            dateFields.forEach((x) => {
               (d as any)[x] = this.createDateAsUTC((d as any)[x]);
             })
             return d
@@ -53,11 +31,25 @@ export abstract class BaseService<T extends  Object> {
       ),
       tap(() => this.isLoading$.next(false))
     )
+
+  public readonly data$ = this._refreshTrigger$.pipe(
+    mergeMap(() => this.apiRequest$),
+    shareReplay(1)
+  );
+
+  protected constructor(protected http: HttpClient,
+                        protected logger: LoggingService,
+                        protected url: string) {
+  }
+
+  public refreshData(reset: boolean = false) {
+    this.logger.info("Refresh data.")
+    this._refreshTrigger$.next()
   }
 
 
-  protected  createDateAsUTC(date: Date | string): Date {
-    if(typeof date === 'string')
+  protected createDateAsUTC(date: Date | string): Date {
+    if (typeof date === 'string')
       date = new Date(date)
 
     return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds()));

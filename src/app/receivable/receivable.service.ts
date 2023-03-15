@@ -28,7 +28,7 @@ export class ReceivableService extends BaseService<Receivable> {
   getDataForHarvest(harvest: string) {
     this.isLoading$.next(true)
 
-    zip(super.data$, this.fieldService.data$).pipe(
+    zip(this.data$, this.fieldService.data$).pipe(
       map(([receivables, fields]) => {
         let res: ConsolidatedReceivable[] = []
 

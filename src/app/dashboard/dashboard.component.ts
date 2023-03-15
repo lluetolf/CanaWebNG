@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {environment} from '../../environments/environment';
 import {PayableService} from "../payable/payable.service";
-import {delay, map} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {MonthTotal} from "../payable/monthtotal.model";
 import {LoggingService} from "../logging/logging.service";
 import {Observable, Subject, BehaviorSubject} from "rxjs";
@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit, AfterViewInit {
         let years = new Map<number, number[]>();
         x.forEach(entry => {
           const year = years.get(entry.year)
-          if (year === undefined) {
+          if (!year) {
             const newYear = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             newYear[entry.month] = entry.total
             years.set(entry.year, newYear)
@@ -62,7 +62,6 @@ export class DashboardComponent implements OnInit, AfterViewInit {
 
   private createPayableSummary(): Observable<MonthTotal[]> {
     return this.payableService.data$.pipe(
-      //delay(5000),
       map(x => {
         return x.map<MonthTotal>(p => new MonthTotal(
           p.transactionDate.getFullYear(),
