@@ -37,7 +37,10 @@
       </ng-container>
       <ng-container matColumnDef="ingenioId">
         <mat-header-cell *matHeaderCellDef> IngenioId</mat-header-cell>
-        <mat-cell *matCellDef="let field"> {{field.ingenioId}} </mat-cell>
+        <mat-cell *matCellDef="let field">
+          <ng-container *ngFor="let f of field.ingenioId; let isLast=last">{{f.ingenioId}}<ng-container *ngIf="!isLast">, </ng-container>
+          </ng-container>
+        </mat-cell>
       </ng-container>
       <ng-container matColumnDef="operations">
         <mat-header-cell *matHeaderCellDef></mat-header-cell>
