@@ -75,7 +75,7 @@ export class FieldListComponent implements OnInit {
     };
 
     let dialogRef = this.modifyDialog.open(EditFieldDialogComponent, dialogConfig)
-    dialogRef.afterClosed().subscribe(() => this.fieldService.refreshData(true))
+    dialogRef.afterClosed().subscribe(() => this.fieldService.refreshData())
   }
 
 }

@@ -24,7 +24,7 @@ export class DeleteFieldDialogComponent {
       .subscribe({
         next: () => {
           this.logger.info('Delete successful')
-          this.fieldService.refreshData(true)
+          this.fieldService.refreshData()
           this.dialogRef.close()
         },
         error: error => {

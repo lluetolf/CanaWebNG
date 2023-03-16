@@ -24,7 +24,7 @@ export class DeletePayableDialogComponent {
       .subscribe({
         next: () => {
           this.logger.info('Delete successful')
-          this.payableService.refreshData(true)
+          this.payableService.refreshData()
           this.dialogRef.close()
         },
         error: error => {
