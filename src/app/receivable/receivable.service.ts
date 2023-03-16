@@ -5,7 +5,7 @@ import {BaseService} from '../global/base-service';
 import {LoggingService} from '../logging/logging.service';
 import {ConsolidatedReceivable, Receivable} from './receivable.model';
 import {BehaviorSubject, zip} from "rxjs";
-import {catchError, map} from "rxjs/operators";
+import {catchError, map, tap} from "rxjs/operators";
 import {FieldService} from "../field/field.service";
 
 
@@ -29,19 +29,24 @@ export class ReceivableService extends BaseService<Receivable> {
     this.isLoading$.next(true)
 
     zip(this.data$, this.fieldService.data$).pipe(
+      tap(() => this.logger.info("start the zipping")),
       map(([receivables, fields]) => {
         let res: ConsolidatedReceivable[] = []
 
-        let selectedReceivables: Receivable[] = receivables
-          .filter(r => r.harvest == harvest)
+        let selectedReceivables: Receivable[] = receivables.filter(r => r.harvest == harvest)
         selectedReceivables.forEach(r => r.ingenioId = this.getIngenioId(r))
 
-        fields.forEach(f => {
-          let ingenioIds = f.ingenioId.map(f2 => f2.ingenioId)
-          let rs = selectedReceivables.filter(r => ingenioIds.includes(r.ingenioId ? r.ingenioId : "UNKNOWN"))
-          res.push(<ConsolidatedReceivable>{name: f.name, receivables: rs})
-        })
-        this.logger.info("R: " + selectedReceivables.length + " / " + receivables.length +", F: " + fields.length)
+        try {
+          fields.filter(x => x.ingenioId)
+            .forEach(f => {
+              let ingenioIds = f.ingenioId.map(f2 => f2.ingenioId)
+              let rs = selectedReceivables.filter(r => ingenioIds.includes(r.ingenioId ? r.ingenioId : "UNKNOWN"))
+              res.push(<ConsolidatedReceivable>{name: f.name, receivables: rs})
+            })
+        } catch (e) {
+          this.logger.error("Failed matching fields and ingenioids: " + e)
+        }
+        this.logger.info("R: " + selectedReceivables.length + " / " + receivables.length + ", F: " + fields.length)
         return res
       }),
       catchError(this.handleError)
