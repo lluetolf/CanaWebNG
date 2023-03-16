@@ -10,12 +10,27 @@
         <input matInput formControlName="name">
       </mat-form-field>
     </div>
+
     <div class="row-container">
-      <mat-form-field appearance="fill">
-        <mat-label>IngenioId</mat-label>
-        <input matInput formControlName="ingenioId">
-      </mat-form-field>
+      <h3>IngenioIds</h3>
+      <div formArrayName="ingenioId" class="ingenioids-container">
+        <div *ngFor="let question of ingenioIdFormArray.controls; let i = index" class="formarray-container">
+          <ng-container [formGroupName]="i">
+            <mat-form-field appearance="fill" class="ingenioid-formfield">
+              <mat-label>Id</mat-label>
+              <input matInput formControlName="ingenioId">
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="size-formfield">
+              <mat-label>Size</mat-label>
+              <input matInput formControlName="size">
+            </mat-form-field>
+            <button mat-icon-button type="button" (click)="deleteIngenioId(i)" color="warn" class="delete-button"><mat-icon>delete</mat-icon></button>
+          </ng-container>
+        </div>
+        <button mat-raised-button type="button" color="primary" class="add-button" (click)="addIngenioId()">Add</button>
+      </div>
     </div>
+
     <div class="row-container">
       <mat-form-field appearance="fill">
         <mat-label> Owner</mat-label>
@@ -52,8 +67,7 @@
   </div>
   <div mat-dialog-actions align="end">
     <button mat-button color="warn" (click)="cancel()">Cancel</button>
-    <button mat-button color="primary" [disabled]="fieldForm.invalid || fieldForm.disabled">
-      <span *ngIf="loading$" class="spinner-border spinner-border-sm mr-1"></span>
+    <button mat-raised-button color="primary" [disabled]="fieldForm.invalid || fieldForm.disabled">
       Save
     </button>
   </div>

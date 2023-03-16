@@ -69,7 +69,7 @@ export class FieldListComponent implements OnInit {
 
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = "420px";
+    dialogConfig.width = "600px";
     dialogConfig.data = {
       fieldName
     };

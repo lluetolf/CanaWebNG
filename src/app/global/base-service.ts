@@ -17,7 +17,7 @@ export abstract class BaseService<T extends Object> {
   public isLoading$ = new BehaviorSubject<boolean>(false);
 
   private readonly apiRequest$ =
-    this.http.get<T[]>(this.url + "/all", {headers: new HttpHeaders({"reset": String(false)})}).pipe(
+    this.http.get<T[]>(this.url + "/all", {headers: new HttpHeaders({"reset": String(true)})}).pipe(
       map(
         (data: T[]) => {
           return data.map(d => {
@@ -42,7 +42,7 @@ export abstract class BaseService<T extends Object> {
                         protected url: string) {
   }
 
-  public refreshData(reset: boolean = false) {
+  public refreshData() {
     this.logger.info("Refresh data.")
     this._refreshTrigger$.next()
   }

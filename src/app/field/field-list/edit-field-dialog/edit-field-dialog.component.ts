@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
+import {FormArray, UntypedFormBuilder, UntypedFormGroup, Validators} from "@angular/forms";
 import {FieldService} from "../../field.service";
 import {first} from "rxjs/operators";
 import {LoggingService} from "../../../logging/logging.service";
@@ -22,6 +22,10 @@ export class EditFieldDialogComponent implements OnInit {
 
   errorMsg: string | undefined = undefined;
 
+  get ingenioIdFormArray() {
+    return (this.fieldForm.get("ingenioId") as FormArray);
+  }
+
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { fieldName: string },
               private fb: UntypedFormBuilder,
@@ -40,7 +44,7 @@ export class EditFieldDialogComponent implements OnInit {
       size: ['', Validators.required],
       cultivatedArea: ['', Validators.required],
       acquisitionDate: ['', Validators.required],
-      ingenioId: ['', Validators.required],
+      ingenioId: this.fb.array([]),
       lastUpdated: ['', Validators.required],
     });
 
@@ -52,8 +56,23 @@ export class EditFieldDialogComponent implements OnInit {
       this.fieldForm.controls['name'].disable()
       this.fieldService.getField(this.data.fieldName)
         .pipe(first())
-        .subscribe(x => this.fieldForm.patchValue(x!));
+        .subscribe(x => {
+          const { ingenioId, ...rest } = x!;
+          this.fieldForm.patchValue(rest);
+
+          if(ingenioId) {
+            ingenioId.forEach(x => {
+              this.ingenioIdFormArray.push(
+                this.fb.group({
+                  ingenioId: [x.ingenioId, Validators.required],
+                  size: [x.size, Validators.required]
+                })
+              )
+            });
+          }
+        });
     }
+
     this.fieldForm.controls['lastUpdated'].disable()
 
     this.loading$.subscribe(x => {
@@ -80,6 +99,7 @@ export class EditFieldDialogComponent implements OnInit {
   }
 
   private create() {
+
     this.fieldService.create(this.fieldForm.getRawValue())
       .pipe(first())
       .subscribe({
@@ -131,5 +151,19 @@ export class EditFieldDialogComponent implements OnInit {
         });
       }
     });
+  }
+
+  addIngenioId() {
+    this.ingenioIdFormArray.push(
+      this.fb.group({
+        ingenioId: [undefined, Validators.required],
+        size: [undefined, Validators.required]
+      })
+    );
+  }
+
+
+  deleteIngenioId(i: number) {
+    this.ingenioIdFormArray.removeAt(i)
   }
 }

@@ -1,14 +1,33 @@
-.row-container .mat-form-field + .mat-form-field {
-  margin-left: 8px;
+.mat-form-field{
+  display: unset;
 }
 
-mat-card {
-  width: auto;
-  height: auto;
-  margin: 2em auto;
-  text-align: center;
+.ingenioids-container {
+  display: flex;
+  flex-direction: column;
+  margin: 16px;
+
+  .add-button {
+    width: 50%;
+    align-self: center;
+  }
 }
 
-mat-form-field {
-  display: block;
+.formarray-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+
+  .ingenioid-formfield {
+    flex: 1;
+  }
+
+  .size-formfield {
+    flex: 0.5;
+  }
+
+  .delete-button {
+    margin-bottom: 1.34375em;
+  }
+
 }
