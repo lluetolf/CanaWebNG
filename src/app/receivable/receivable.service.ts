@@ -1,4 +1,4 @@
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {environment} from 'src/environments/environment';
 import {BaseService} from '../global/base-service';
@@ -54,8 +54,15 @@ export class ReceivableService extends BaseService<Receivable> {
       res => {
         this._consolidatedReceivables$.next(res)
         this.isLoading$.next(false)
-      }
+    }
     )
+  }
+
+  public updateDeductions(ingenioId: string, harvest: string, phase: string, amount: number) {
+    const receivableId = `${ingenioId}_${harvest}`
+    const url = `${this.url}`
+    const options = {params: new HttpParams().set('receivableId', receivableId).set('phase', phase.toLowerCase()).set('amount', amount)};
+    return this.http.put(url, {}, options)
   }
 
   private getIngenioId(r: Receivable) {

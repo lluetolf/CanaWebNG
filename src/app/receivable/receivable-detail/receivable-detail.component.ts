@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Receivable, ReceivablePhase } from '../receivable.model';
+import {AbstractControl, FormControl} from "@angular/forms";
+import {ReceivableService} from "../receivable.service";
 
 enum ReceivablePhaseType {
   Pre = "Preliquidation",
@@ -7,7 +9,7 @@ enum ReceivablePhaseType {
   Aju = "Ajuste"
 }
 
-type DataSourceModel = { phase: ReceivablePhaseType } & ReceivablePhase;
+type DataSourceModel = { phase: ReceivablePhaseType, deductionControl: AbstractControl, harvest: string } & ReceivablePhase;
 
 @Component({
   selector: 'app-receivable-detail',
@@ -26,12 +28,21 @@ export class ReceivableDetailComponent {
     }
   }
 
-  displayedColumns = ["phase", "pricePerUnit", "tons", "total"]
+  displayedColumns = ["phase", "pricePerUnit", "tons", "total1", "deductions", "total2"]
 
   dataSource: DataSourceModel[] = [];
   checkSuccess = false;
 
-  constructor() { }
+  constructor(private receivableService: ReceivableService) { }
+
+  onToggleChange(checked: boolean, model: DataSourceModel): void {
+    const newValue = model.deductionControl.value ?? 0;
+    if (checked && newValue != model.deductible) {
+      this.receivableService.updateDeductions(model.ingenioId ?? "", model.harvest, model.phase, model.deductionControl.value ?? 0).subscribe(res => {
+        model.deductible = model.deductionControl.value ?? 0;
+      })
+    }
+  }
 
   private setDataSource(value: Receivable): void {
     const models: DataSourceModel[] = [];
@@ -39,21 +50,27 @@ export class ReceivableDetailComponent {
     if (value.preliquidation) {
       models.push({
         phase: ReceivablePhaseType.Pre,
-        ...value.preliquidation
+        harvest: value.harvest ?? "UNKNOWN",
+        ...value.preliquidation,
+        deductionControl: new FormControl(value.preliquidation.deductible ?? 0 ),
       })
     }
 
     if (value.liquidation) {
       models.push({
         phase: ReceivablePhaseType.Liq,
-        ...value.liquidation
+        harvest: value.harvest ?? "UNKNOWN",
+        ...value.liquidation,
+        deductionControl: new FormControl(value.liquidation.deductible ?? 0 ),
       })
     }
 
     if (value.ajuste) {
       models.push({
         phase: ReceivablePhaseType.Aju,
-        ...value.ajuste
+        harvest: value.harvest ?? "UNKNOWN",
+        ...value.ajuste,
+        deductionControl: new FormControl(value.ajuste.deductible ?? 0 ),
       })
     }
 
@@ -62,6 +79,7 @@ export class ReceivableDetailComponent {
   }
 
   /* TODO: improve check to succeed on rounded value errors */
+  checked: any;
   private validate(value: Receivable): boolean {
     const preLiqTons = this.getRoundedValue(value.preliquidation?.tons);
     const liqTons = this.getRoundedValue(value.liquidation?.tons);

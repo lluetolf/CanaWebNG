@@ -5,7 +5,9 @@
         {{ getTitle(receivable) }}
       </mat-panel-title>
       <mat-panel-description>
-        {{ getDescription(receivable) }}
+        <div class="description-container" >
+          <div class="description-entry" *ngFor="let total of getTotals(receivable)">{{total | currency}}</div>
+        </div>
       </mat-panel-description>
     </mat-expansion-panel-header>
     <app-receivable-detail [receivable]="r" *ngFor="let r of receivable.receivables"></app-receivable-detail>

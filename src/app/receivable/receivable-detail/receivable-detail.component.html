@@ -3,30 +3,46 @@
   <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="phase">
       <mat-header-cell *matHeaderCellDef> Phase</mat-header-cell>
-      <mat-cell *matCellDef="let element"> {{element.phase}} </mat-cell >
+      <mat-cell *matCellDef="let element"> {{element.phase}} </mat-cell>
       <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="pricePerUnit">
-      <mat-header-cell *matHeaderCellDef> P.U</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>P.P.T.</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.pricePerUnit | currency: 'MXN'  }} </mat-cell>
       <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
 
     <ng-container matColumnDef="tons">
-      <mat-header-cell  *matHeaderCellDef> Tons</mat-header-cell>
-      <mat-cell  *matCellDef="let element"> {{element.tons | number }} </mat-cell>
+      <mat-header-cell *matHeaderCellDef>Tons</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.tons | number }} </mat-cell>
       <mat-footer-cell *matFooterCellDef> {{ checkSuccess ? 'OK' : 'FAILED' }} </mat-footer-cell>
     </ng-container>
 
-    <ng-container matColumnDef="total">
-      <mat-header-cell *matHeaderCellDef> Total</mat-header-cell>
+    <ng-container matColumnDef="total1">
+      <mat-header-cell *matHeaderCellDef>Total 1</mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.total | currency: 'MXN' }} </mat-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="deductions">
+      <mat-header-cell *matHeaderCellDef>Deductions</mat-header-cell>
+      <mat-cell *matCellDef="let element">
+          <span class="example-margin2" *ngIf="!mytoggle.checked">{{element.deductible ?? 0 | currency: 'MXN' }} </span>
+          <input class="example-margin2" type="number" min="0" matInput [formControl]="element.deductionControl" [value]="element.deductionControl" *ngIf="mytoggle.checked">
+          <mat-slide-toggle #mytoggle class="example-margin" (toggleChange)="onToggleChange(mytoggle.checked, element)"></mat-slide-toggle>
+      </mat-cell>
+      <mat-footer-cell *matFooterCellDef></mat-footer-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="total2">
+      <mat-header-cell *matHeaderCellDef>Total 2</mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.total-element.deductible | currency: 'MXN' }} </mat-cell>
       <mat-footer-cell *matFooterCellDef></mat-footer-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     <mat-footer-row *matFooterRowDef="displayedColumns;"></mat-footer-row>
-  </mat-table >
+  </mat-table>
 </div>

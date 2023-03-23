@@ -1,0 +1,13 @@
+.description-entry {
+  width: 25%;
+}
+
+.description-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mat-expansion-panel-header-title {
+  flex-grow: 0.5;
+}

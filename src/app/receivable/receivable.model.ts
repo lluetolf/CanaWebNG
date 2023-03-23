@@ -16,4 +16,5 @@ export interface ReceivablePhase {
   pricePerUnit?: number;
   tons?: number;
   total?: number;
+  deductible?: number;
 }

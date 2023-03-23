@@ -12,6 +12,8 @@ export class ReceivableListComponent {
   @Input()
   consolidatedReceivables$!: Observable<ConsolidatedReceivable[]>;
 
+
+
   constructor() {
   }
 
@@ -23,8 +25,7 @@ export class ReceivableListComponent {
     return consReceivable.name ?? "";
   }
 
-  // this isn't working properly, needs to sum up all the receivables for this field.
-  getDescription(consReceivable: ConsolidatedReceivable): string {
+  getTotals(consReceivable: ConsolidatedReceivable): number[] {
     let preTotal = 0;
     let liqTotal = 0;
     let ajuTotal = 0;
@@ -36,10 +37,9 @@ export class ReceivableListComponent {
     let totalTotal = Math.round(preTotal + liqTotal + ajuTotal)
 
     if (consReceivable.receivables.length < 1) {
-      return "";
+      return [];
     }
 
-    return `Pre MX$${preTotal.toLocaleString()} | Liq MX$${liqTotal.toLocaleString()} | Aju MX$${ajuTotal.toLocaleString()} | Total MX$${totalTotal.toLocaleString()}`
+    return [preTotal, liqTotal, ajuTotal, totalTotal]
   }
-
 }
